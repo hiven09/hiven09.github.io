@@ -1,0 +1,1225 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="正则," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="开篇想必很多人都对正则表达式都头疼.今天,我以我的认识,加上网上一些文章,希望用常人都可以理解的表达方式.来和大家分享学习经验. 开篇,还是得说说 ^ 和 $ 他们是分别用来匹配字符串的开始和结束，以下分别举例说明  12&quot;^The&quot;: 开头一定要有&quot;The&quot;字符串; &quot;of despair$&quot;: 结尾一定要有&quot;of despair&quot; 的字符串; 那么,12&quot;^abc$&quot;: 就是要求以abc开头和">
+<meta name="keywords" content="正则">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则解说">
+<meta property="og:url" content="https://hiven09.github.io/php-regex.html">
+<meta property="og:site_name" content="Hiven">
+<meta property="og:description" content="开篇想必很多人都对正则表达式都头疼.今天,我以我的认识,加上网上一些文章,希望用常人都可以理解的表达方式.来和大家分享学习经验. 开篇,还是得说说 ^ 和 $ 他们是分别用来匹配字符串的开始和结束，以下分别举例说明  12&quot;^The&quot;: 开头一定要有&quot;The&quot;字符串; &quot;of despair$&quot;: 结尾一定要有&quot;of despair&quot; 的字符串; 那么,12&quot;^abc$&quot;: 就是要求以abc开头和">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-09-19T06:06:40.785Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="正则解说">
+<meta name="twitter:description" content="开篇想必很多人都对正则表达式都头疼.今天,我以我的认识,加上网上一些文章,希望用常人都可以理解的表达方式.来和大家分享学习经验. 开篇,还是得说说 ^ 和 $ 他们是分别用来匹配字符串的开始和结束，以下分别举例说明  12&quot;^The&quot;: 开头一定要有&quot;The&quot;字符串; &quot;of despair$&quot;: 结尾一定要有&quot;of despair&quot; 的字符串; 那么,12&quot;^abc$&quot;: 就是要求以abc开头和">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hiven09.github.io/php-regex.html"/>
+
+
+
+
+
+  <title>正则解说 | Hiven</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b568ca553ada1a11e6e4283e2426a605";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hiven</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Hiven blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://hiven09.github.io/php-regex.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hiven">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/hiven.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hiven">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">正则解说</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-20T12:00:00+08:00">
+                2017-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/php-regex.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="php-regex.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h3><p>想必很多人都对正则表达式都头疼.今天,我以我的认识,加上网上一些文章,希望用常人都可以理解的表达方式.来和大家分享学习经验.</p>
+<p>开篇,还是得说说 ^ 和 $ 他们是分别用来匹配字符串的开始和结束，以下分别举例说明 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"^The"</span>: 开头一定要有<span class="string">"The"</span>字符串; </span><br><span class="line"><span class="string">"of despair$"</span>: 结尾一定要有<span class="string">"of despair"</span> 的字符串;</span><br></pre></td></tr></table></figure>
+<p>那么,<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"^abc$"</span>: 就是要求以abc开头和以abc结尾的字符串，实际上是只有abc匹配 </span><br><span class="line"><span class="string">"notice"</span>: 匹配包含notice的字符串</span><br></pre></td></tr></table></figure></p>
+<p>你可以看见如果你没有用我们提到的两个字符（最后一个例子），就是说 模式（正则表达式） 可以出现在被检验字符串的任何地方，你没有把他锁定到两边 </p>
+<p>接着,说说 ‘*’, ‘+’,和 ‘?’,<br>他们用来表示一个字符可以出现的次数或者顺序. 他们分别表示：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"zero or more"</span>相当于&#123;0,&#125;, </span><br><span class="line"><span class="string">"one or more"</span>相当于&#123;1,&#125;, </span><br><span class="line"><span class="string">"zero or one."</span>相当于&#123;0,1&#125;, 这里是一些例子:</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"ab*"</span>: 和ab&#123;0,&#125;同义,匹配以a开头,后面可以接0个或者N个b组成的字符串(<span class="string">"a"</span>, <span class="string">"ab"</span>, <span class="string">"abbb"</span>, 等); </span><br><span class="line"><span class="string">"ab+"</span>: 和ab&#123;1,&#125;同义,同上条一样，但最少要有一个b存在 (<span class="string">"ab"</span>, <span class="string">"abbb"</span>, 等.); </span><br><span class="line"><span class="string">"ab?"</span>:和ab&#123;0,1&#125;同义,可以没有或者只有一个b; </span><br><span class="line"><span class="string">"a?b+$"</span>: 匹配以一个或者0个a再加上一个以上的b结尾的字符串.</span><br></pre></td></tr></table></figure>
+<p>要点, ‘*’, ‘+’,和 ‘?’只管它前面那个字符.<br>你也可以在大括号里面限制字符出现的个数，比如<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"ab&#123;2&#125;"</span>: 要求a后面一定要跟两个b（一个也不能少）(<span class="string">"abb"</span>); </span><br><span class="line"><span class="string">"ab&#123;2,&#125;"</span>: 要求a后面一定要有两个或者两个以上b(如<span class="string">"abb"</span>, <span class="string">"abbbb"</span>, 等.); </span><br><span class="line"><span class="string">"ab&#123;3,5&#125;"</span>: 要求a后面可以有2－5个b(<span class="string">"abbb"</span>, <span class="string">"abbbb"</span>, or <span class="string">"abbbbb"</span>).</span><br></pre></td></tr></table></figure></p>
+<p>现在我们把一定几个字符放到小括号里，比如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"a(bc)*"</span>: 匹配 a 后面跟0个或者一个<span class="string">"bc"</span>; </span><br><span class="line"><span class="string">"a(bc)&#123;1,5&#125;"</span>: 一个到5个 <span class="string">"bc."</span></span><br></pre></td></tr></table></figure></p>
+<p>还有一个字符 ‘│’, 相当于OR 操作:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"hi│hello"</span>: 匹配含有<span class="string">"hi"</span> 或者 <span class="string">"hello"</span> 的 字符串; </span><br><span class="line"><span class="string">"(b│cd)ef"</span>: 匹配含有 <span class="string">"bef"</span> 或者 <span class="string">"cdef"</span>的字符串; </span><br><span class="line"><span class="string">"(a│b)*c"</span>: 匹配含有这样多个（包括0个）a或b，后面跟一个c 的字符串;</span><br></pre></td></tr></table></figure></p>
+<p>一个点(‘.’)可以代表所有的单一字符,不包括”\n”</p>
+<p>如果,要匹配包括”\n”在内的所有单个字符,怎么办?</p>
+<p>对了,用’[\n.]’这种模式.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"a.[0-9]"</span>: 一个a加一个字符再加一个0到9的数字 </span><br><span class="line"><span class="string">"^.&#123;3&#125;$"</span>: 三个任意字符结尾 .</span><br></pre></td></tr></table></figure></p>
+<p>中括号括住的内容只匹配一个单一的字符<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"[ab]"</span>: 匹配单个的 a 或者 b ( 和 <span class="string">"a│b"</span> 一样); </span><br><span class="line"><span class="string">"[a-d]"</span>: 匹配<span class="string">'a'</span> 到<span class="string">'d'</span>的单个字符 (和<span class="string">"a│b│c│d"</span> 还有 <span class="string">"[abcd]"</span>效果一样); 一般我们都用[a-zA-Z]来指定字符为一个大小写英文</span><br><span class="line"><span class="string">"^[a-zA-Z]"</span>: 匹配以大小写字母开头的字符串 </span><br><span class="line"><span class="string">"[0-9]%"</span>: 匹配含有 形如 x％ 的字符串 </span><br><span class="line"><span class="string">",[a-zA-Z0-9]$"</span>: 匹配以逗号再加一个数字或字母结尾的字符串</span><br></pre></td></tr></table></figure></p>
+<p>你也可以把你不想要得字符列在中括号里，你只需要在总括号里面使用’^’ 作为开头 “%[^a-zA-Z]%” 匹配含有两个百分号里面有一个非字母的字符串. </p>
+<p>要点:^用在中括号开头的时候,就表示排除括号里的字符 </p>
+<p>为了PHP能够解释，你必须在这些字符面前后加’’,并且将一些字符转义. </p>
+<p>不要忘记在中括号里面的字符是这条规路的例外?在中括号里面, 所有的特殊字符，包括(‘’), 都将失去他们的特殊性质 “[*+?{}.]”匹配含有这些字符的字符串.</p>
+<p>还有,正如regx的手册告诉我们: “如果列表里含有 ‘]’, 最好把它作为列表里的第一个字符(可能跟在’^’后面). 如果含有’-‘, 最好把它放在最前面或者最后面, or 或者一个范围的第二个结束点[a-d-0-9]中间的‘-’将有效. </p>
+<p>看了上面的例子,你对{n,m}应该理解了吧.要注意的是,n和m都不能为负整数,而且n总是小于m. 这样,才能 最少匹配n次且最多匹配m次. 如”p{1,5}”将匹配 “pvpppppp”中的前五个p</p>
+<p>下面说说以\开头的</p>
+<p>\b 书上说他是用来匹配一个单词边界,就是…比如’ve\b’,可以匹配love里的ve而不匹配very里有ve</p>
+<p>\B 正好和上面的\b相反.例子我就不举了</p>
+<p>…..突然想起来….可以到<a href="https://hiven09.github.io/2017/02/18/%E7%94%A8%20hexo%20%E5%88%9B%E5%BB%BA%20blog/">https://hiven09.github.io/2017/02/18/%E7%94%A8%20hexo%20%E5%88%9B%E5%BB%BA%20blog/</a> 看看其它用\ 开头的语法</p>
+<p>好,我们来做个应用:</p>
+<p>如何构建一个模式来匹配 货币数量 的输入 </p>
+<p>构建一个匹配模式去检查输入的信息是否为一个表示money的数字。我们认为一个表示money的数量有四种方式： “10000.00” 和 “10,000.00”,或者没有小数部分, “10000” and “10,000”. 现在让我们开始构建这个匹配模式:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[1-9][0-9]*$</span><br></pre></td></tr></table></figure></p>
+<p>这是所变量必须以非0的数字开头.但这也意味着 单一的 “0” 也不能通过测试. 以下是解决的方法:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^(0│[1-9][0-9]*)$</span><br></pre></td></tr></table></figure></p>
+<p>“只有0和不以0开头的数字与之匹配”，我们也可以允许一个负号在数字之前:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^(0│-?[1-9][0-9]*)$</span><br></pre></td></tr></table></figure></p>
+<p>这就是: “0 或者 一个以0开头 且可能 有一个负号在前面的数字.” 好了,现在让我们别那么严谨，允许以0开头.现在让我们放弃 负号 , 因为我们在表示钱币的时候并不需要用到. 我们现在指定 模式 用来匹配小数部分:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[0-9]+(\.[0-9]+)?$</span><br></pre></td></tr></table></figure></p>
+<p>这暗示匹配的字符串必须最少以一个阿拉伯数字开头. 但是注意，在上面模式中 “10.” 是不匹配的, 只有 “10” 和 “10.2” 才可以. （你知道为什么吗）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[0-9]+(\.[0-9]&#123;2&#125;)?$</span><br></pre></td></tr></table></figure></p>
+<p>我们上面指定小数点后面必须有两位小数.如果你认为这样太苛刻,你可以改成:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[0-9]+(\.[0-9]&#123;1,2&#125;)?$</span><br></pre></td></tr></table></figure></p>
+<p>这将允许小数点后面有一到两个字符. 现在我们加上用来增加可读性的逗号（每隔三位）, 我们可以这样表示:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[0-9]&#123;1,3&#125;(,[0-9]&#123;3&#125;)*(\.[0-9]&#123;1,2&#125;)?$ [page]</span><br></pre></td></tr></table></figure></p>
+<p>不要忘记 ‘+’ 可以被 ‘*’ 替代 如果你想允许空白字符串被输入话 (为什么?). 也不要忘记反斜杆 ’\’ 在php字符串中可能会出现错误 (很普遍的错误). </p>
+<p>现在，我们已经可以确认字符串了, 我们现在把所有逗号都去掉 str_replace(“,”, “”, $money) 然后在把类型看成 double然后我们就可以通过他做数学计算了. </p>
+<p>再来一个:</p>
+<p>构造检查email的正则表达式 </p>
+<p>在一个完整的email地址中有三个部分: </p>
+<ol>
+<li>用户名 (在 ‘@’ 左边的一切),<br>2.‘@’,</li>
+<li>服务器名(就是剩下那部分). </li>
+</ol>
+<p>用户名可以含有大小写字母阿拉伯数字,句号 (‘.’), 减号(‘-‘), and 下划线 (‘_’). 服务器名字也是符合这个规则,当然下划线除外. </p>
+<p>现在, 用户名的开始和结束都不能是句点. 服务器也是这样. 还有你不能有两个连续的句点他们之间至少存在一个字符，好现在我们来看一下怎么为用户名写一个匹配模式:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[_a-zA-Z0-9-]+$</span><br></pre></td></tr></table></figure></p>
+<p>现在还不能允许句号的存在. 我们把它加上:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*$</span><br></pre></td></tr></table></figure></p>
+<p>上面的意思就是说: “以至少一个规范字符（除了.）开头,后面跟着0个或者多个以点开始的字符串.” </p>
+<p>简单化一点, 我们可以用 eregi()取代 ereg().eregi()对大小写不敏感, 我们就不需要指定两个范围 “a-z” 和 “A-Z” ? 只需要指定一个就可以了:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[_a-z0-9-]+(\.[_a-z0-9-]+)*$</span><br></pre></td></tr></table></figure></p>
+<p>后面的服务器名字也是一样,但要去掉下划线:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[a-z0-9-]+(\.[a-z0-9-]+)*$</span><br></pre></td></tr></table></figure></p>
+<p>好. 现在只需要用”@”把两部分连接:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$</span><br></pre></td></tr></table></figure></p>
+<p>这就是完整的email认证匹配模式了,只需要调用<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eregi(‘^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$ ’,<span class="variable">$eamil</span>)</span><br></pre></td></tr></table></figure></p>
+<p>就可以得到是否为email了<br>正则表达式的其他用法 </p>
+<p>提取字符串 </p>
+<p>ereg() and eregi() 有一个特性是允许用户通过正则表达式去提取字符串的一部分(具体用法你可以阅读手册). 比如说,我们想从 path/URL 提取文件名 ? 下面的代码就是你需要:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ereg(<span class="string">"([^\\/]*)$"</span>, <span class="variable">$pathOrUrl</span>, <span class="variable">$regs</span>); </span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$regs</span>[1];</span><br></pre></td></tr></table></figure></p>
+<p>高级的代换 </p>
+<p>ereg_replace() 和 eregi_replace()也是非常有用的: 假如我们想把所有的间隔负号都替换成逗号: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ereg_replace(<span class="string">"[ \n\r\t]+"</span>, <span class="string">","</span>, trim(<span class="variable">$str</span>));</span><br></pre></td></tr></table></figure>
+<p>最后,我把另一串检查EMAIL的正则表达式让看文章的你来分析一下.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"^[-!#$%&amp;\'*+\\./0-9=?A-Z^_`a-z&#123;|&#125;~]+'.'@'.'[-!#$%&amp;\'*+\\/0-9=?A-Z^_`a-z&#123;|&#125;~]+\.'.'[-!#$%&amp;\'*+\\./0-9=?A-Z^_`a-z&#123;|&#125;~]+$"</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您请我喝咖啡！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/WeChat.png" alt="Hiven WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/Alipay.jpg" alt="Hiven Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/正则/" rel="tag"># 正则</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/php-wechat.html" rel="next" title="php支付宝多账号支付">
+                <i class="fa fa-chevron-left"></i> php支付宝多账号支付
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/php-umeng.html" rel="prev" title="php友盟推送">
+                php友盟推送 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/hiven.gif"
+               alt="Hiven" />
+          <p class="site-author-name" itemprop="name">Hiven</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#开篇"><span class="nav-number">1.</span> <span class="nav-text">开篇</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hiven</span>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://hiven09.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+		  this.language = "zh";
+          this.page.url = 'https://hiven09.github.io/php-regex.html';
+          this.page.identifier = 'php-regex.html';
+          this.page.title = '正则解说';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://hiven09.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1380 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="job," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="问项目的具体内容，遇到的挑战，具体解决办法。为什么使用独立文件服务器？  1，从服务器本身来说，单台的话会加大机器IO负载，多台( 负载均衡 )的话涉及到文件同步的问题  2，浏览器对一个域名下的并发是有数量限制的，独立域名的文件服务器会加快响应  3，防止域名污染，请求图片的时候是不用带上cookie  memcache与redis的区别，redis的优势之处。怎样解决memcache命中率低">
+<meta name="keywords" content="job">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试">
+<meta property="og:url" content="https://hiven09.github.io/面试问题.html">
+<meta property="og:site_name" content="Hiven">
+<meta property="og:description" content="问项目的具体内容，遇到的挑战，具体解决办法。为什么使用独立文件服务器？  1，从服务器本身来说，单台的话会加大机器IO负载，多台( 负载均衡 )的话涉及到文件同步的问题  2，浏览器对一个域名下的并发是有数量限制的，独立域名的文件服务器会加快响应  3，防止域名污染，请求图片的时候是不用带上cookie  memcache与redis的区别，redis的优势之处。怎样解决memcache命中率低">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-29T07:59:17.269Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="面试">
+<meta name="twitter:description" content="问项目的具体内容，遇到的挑战，具体解决办法。为什么使用独立文件服务器？  1，从服务器本身来说，单台的话会加大机器IO负载，多台( 负载均衡 )的话涉及到文件同步的问题  2，浏览器对一个域名下的并发是有数量限制的，独立域名的文件服务器会加快响应  3，防止域名污染，请求图片的时候是不用带上cookie  memcache与redis的区别，redis的优势之处。怎样解决memcache命中率低">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hiven09.github.io/面试问题.html"/>
+
+
+
+
+
+  <title>面试 | Hiven</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b568ca553ada1a11e6e4283e2426a605";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hiven</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Hiven blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://hiven09.github.io/面试问题.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hiven">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/hiven.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hiven">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">面试</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-18T12:00:00+08:00">
+                2017-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/经验/" itemprop="url" rel="index">
+                    <span itemprop="name">经验</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/面试问题.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="面试问题.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><p>问项目的具体内容，遇到的挑战，具体解决办法。<br>为什么使用独立文件服务器？<br>  1，从服务器本身来说，单台的话会加大机器IO负载，多台( 负载均衡 )的话涉及到文件同步的问题<br>  2，浏览器对一个域名下的并发是有数量限制的，独立域名的文件服务器会加快响应<br>  3，防止域名污染，请求图片的时候是不用带上cookie</p>
+</li>
+<li><p>memcache与redis的区别，redis的优势之处。怎样解决memcache命中率低的问题，问了在实际项目中memcache命中率。<br>  redis丰富的数据结构，支持持久化，支持同步。提供命中率一般都是把数据细粒度化，分级组合缓存。<br>  memcache命中率查看：telnet连接上去 执行status命令 get_hits/cmd_get * 100%<br>  <a href="https://yq.aliyun.com/articles/48955" target="_blank" rel="noopener">https://yq.aliyun.com/articles/48955</a></p>
+</li>
+<li><p>svn与git 的区别，让说具体的工作流程，使用git 的好处，以及怎样处理冲突，基本的命令写了两个。<br>  最核心的区别Git是分布式的，而Svn不是分布的</p>
+</li>
+<li><p>数据库的存储引擎，myisam与innodb的区别，说出除了这两种外的其他存储引擎。<br>  区别：索引，事务，结构<br>  tokuDB,memory等</p>
+</li>
+<li><p>int 与bigint的区别，实际使用的时候主键选择哪个？int（10）与int（11）的区别，varchar与char的区别<br>  长度不一样，看情况数据多久使用bigint。 int(10) / int(11) 后面这个括号里的数字是显示长度，不会影响到存储，有zerofill的<br>  时候才有区别。varchar是变长 char是定长。</p>
+</li>
+<li><p>数据库设计，用户表与登录表分开的好处，<br>  冷热数据分开，提高速度因为活跃用户只是总用户的一小部分,</p>
+</li>
+<li><p>session与cookie的区别<br>  分布式怎样解决session共享问题<br>　　存储在独立的共享空间中（mysql，redis，memcache）</p>
+</li>
+<li><p>get与post的区别<br>　　GET的语义是请求获取指定的资源。GET方法是安全、幂等、可缓存的（除非有<br>　　Cache-ControlHeader的约束）,GET方法的报文主体没有任何语义。POST的语义是根据请求负荷（报文主体）对指定的资源做出处<br>　　理，具体的处理方式视资源类型而不同。POST不安全，不幂等，（大部分实现）不可缓存。为了针对其不可缓存性，有一系列的<br>　　方法来进行优化，以后有机会再研究（FLAG已经立起）。</p>
+</li>
+<li>php autoload机制<br>　　调用不存在的类的时候自动调用该函数，该函数内部实现通过类名（参数）查找类文件的方法</li>
+<li>三次握手与四次挥手的过程（主要是画图），各个参数的含义<br>　　 SYN    SYN+ACK   ACK</li>
+<li>http与https的区别，https怎样保准安全（结合ssl）<br>[<a href="http://www.jianshu.com/p/b894a7e1c779]" target="_blank" rel="noopener">http://www.jianshu.com/p/b894a7e1c779]</a><br>[<a href="http://wetest.qq.com/lab/view/110.html]" target="_blank" rel="noopener">http://wetest.qq.com/lab/view/110.html]</a><br>[<a href="http://www.barretlee.com/blog/2016/04/24/detail-about-ca-and-certs/]" target="_blank" rel="noopener">http://www.barretlee.com/blog/2016/04/24/detail-about-ca-and-certs/]</a></li>
+</ul>
+<ul>
+<li><p>链表的结构体（线性和链式），插入一个元素的操作代码（纸上写）</p>
+</li>
+<li><p>排序部分，时间复杂度，写出一个排序算法。</p>
+</li>
+<li><p>二分查找的思想，时间复杂度
+　</p>
+</li>
+<li><p>apache与ngiax的区别<br>nginx性能高，这得益于Nginx使用了最新的epoll（Linux2.6内核）和kqueue（freebsd）网络I/O模型，而Apache则使用的是传统的select模型。目前Linux下能够承受高并发访问的Squid、Memcached都采用的是epoll网络I/O模型。<br>apache基于进程，nginx基于线程</p>
+</li>
+<li><p>有一个ip日志文件每行一个ip，统计某一个ip出现的次数<br>  cat file |grep ip |wc -l</p>
+</li>
+<li><p>mysql的索引是那种数据结构，为什么使用这种数据结构。<br>  B+树<br>  B树的各种操作能使B树保持较低的高度，从而达到有效避免磁盘过于频繁的查找存取操作，从而有效提高查找效率<br>  <a href="http://blog.codinglabs.org/articles/theory-of-mysql-index.html" target="_blank" rel="noopener">http://blog.codinglabs.org/articles/theory-of-mysql-index.html</a></p>
+</li>
+<li><p>设计一个数据表，用来存储url信息，此表会经常发生插入删除操作，应用场景是查找某个url是否存在，请写出表结构，并加说明。<br>  id url md5<br>  md5列加索引，url长度普遍偏长，域名重复度高，前缀索引在这种场景下不太好，使用MD5 char 固定长度索引</p>
+</li>
+<li><p>比较单词a 和 b判断b单词的字母是否都在a中。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$a</span> = <span class="string">'abc'</span>;</span><br><span class="line"><span class="variable">$b</span> = <span class="string">'defc'</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$arr</span> = str_split(<span class="variable">$a</span> . <span class="variable">$b</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (count(<span class="variable">$arr</span>) != count(array_unique(<span class="variable">$arr</span>))) &#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">'repeat'</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">'no repeat'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>写一个timer类，用来统计应用程序的运行时间，并写出调用方法。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">class timer &#123;</span><br><span class="line">    private $checkPoint = [];</span><br><span class="line"></span><br><span class="line">    public function __construct() &#123;</span><br><span class="line">        $this-&gt;checkPoint[] = time();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function check() &#123;</span><br><span class="line">        $this-&gt;checkPoint[] = time();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function show() &#123;</span><br><span class="line">        foreach ($this-&gt;checkPoint as &amp;$item) &#123;</span><br><span class="line">            echo $item . PHP_EOL;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$time = new timer();</span><br><span class="line">sleep(2);</span><br><span class="line">$time-&gt;check();</span><br><span class="line">sleep(4);</span><br><span class="line">$time-&gt;check();</span><br><span class="line">sleep(3);</span><br><span class="line">$time-&gt;show();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>新浪微博一年产生的数据量是多少，应该怎么存储这些数据。<br>  历史数据归档, 使用压缩比高的引擎比如tokudb</li>
+<li>状态吗：204，304，404的含义，可以参考（<a href="http://tool.oschina.net/commons?type=5）" target="_blank" rel="noopener">http://tool.oschina.net/commons?type=5）</a></li>
+<li>介绍你了解的开源项目</li>
+<li>索引的最左原则，可以参考（<a href="http://blog.csdn.net/shangxiaoxue/article/details/7514187）" target="_blank" rel="noopener">http://blog.csdn.net/shangxiaoxue/article/details/7514187）</a><br>  针对联合索引的</li>
+<li><p>浏览器输入url到页面呈现，经过的过程， 和用到的协议</p>
+</li>
+<li><p>mc 与 redis的区别，内存管理方面。<br>  <a href="http://www.voidcn.com/article/p-nletigkh-yx.html" target="_blank" rel="noopener">http://www.voidcn.com/article/p-nletigkh-yx.html</a><br>  都是提前申请一大块内存，mc是把这块内存切成大小不一的块（通过增长因子），会有内存浪费，但是存取快<br>  redis是把这块内存的大小存在内存开始处，通过指针操作<br>微博中reids的应用场景，redis的内存分配机制，为什么使用redis不适用MC，mc与redis的并发哪个较高<br>  mc并发高，它是多线程的   </p>
+</li>
+<li>array_map() 的使用场景，array_merge(),合并数组之后的键名变换情况<br>  array_map() 为数组每一个元素应用回调函数<br>  array_merge() 数字键不会覆盖   字符串键会覆盖</li>
+<li>php几个编码函数区别（json_encode, http_build_query, urlencode等区别）<br>  json_encode  把数组转成json<br>  http_build_query 数组转查询字符串<br>  urlencode url编码 -_.之外的都转换为%加连个数字空格转+号</li>
+<li><p>正则表达式中 . * + / ? 的含义</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">? 0 个或1个</span><br><span class="line">* 表示0到多个</span><br><span class="line">+ 表示1到多个</span><br><span class="line">. 匹配除换行符外的所有单个的字符</span><br><span class="line">/ 定界</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>给定一个数字，2进制转换成16进制<br>  <a href="http://www.cnblogs.com/gaizai/p/4233780.html#_labelConvert33" target="_blank" rel="noopener">http://www.cnblogs.com/gaizai/p/4233780.html#_labelConvert33</a></p>
+</li>
+<li><p>打印前一天的日期时间格式：2016.03.18 10:15:12，打印上个月的最后一天的日期</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> getPrevMonthFirstDay(<span class="variable">$date</span>) &#123; </span><br><span class="line">    <span class="built_in">return</span> date(<span class="string">'Y-m-d'</span>, strtotime(date(<span class="string">'Y-m-01'</span>, <span class="variable">$date</span>) . <span class="string">' -1 month'</span>)); </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> getPrevMonthLastDay(<span class="variable">$date</span>) &#123; </span><br><span class="line">    <span class="built_in">return</span> date(<span class="string">'Y-m-d'</span>, strtotime(date(<span class="string">'Y-m-01'</span>, <span class="variable">$date</span>) . <span class="string">' -1 day'</span>)); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PHP发送请求的方法，有什么不同点<br>  curl  file_get_content<br>  curl支持很多协议，有FTP, FTPS, HTTP, HTTPS, GOPHER, TELNET, DICT, FILE以及LDAP，也就是说，它能做到很多file_get_content做不到的事情。curl在php可以实现远程获取和采集内容；实现PHP网页版的FTP上传下载；实现模拟登陆；实现接口对接（API），数据传输；实现模拟Cookie；下载文件断点续传等等，功能十分强大。<br>  首先需要在php.ini中开启该功能，即去掉 ;extension= php_curl.dll 前面的分号</p>
+</li>
+<li><p>写出10个mysql 的字段类型，说明使用场景</p>
+</li>
+<li><p>一个数据表，70个字段，10G的数据量，每天50w的数据增量，说出有哪些优化的方法<br>  拆字段<br>  10天一分区 或者 分表</p>
+</li>
+<li>写一个定时任务，每天2点到8点，每隔10分钟调用一次PHP脚本 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/10 2-8 * * * /data/www/test.php</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>使用正则表达式判断ip的合法性，要考虑全面</p>
+</li>
+<li><p>redis中数据存储方式，各种数据结构应用的场景，redis做消息队列与专业的消息队列有什么区别和优势<br>  redis队列是轻量级的队列，不支持消息持久化</p>
+</li>
+<li><p>你对GO语言的理解，速度快吗？快在哪？</p>
+</li>
+<li><p>抓取 a.html页面，把含有a便签中的href全部抓取，如果url含有guazi.com就把该条url标题上guazi，然后再抓取该链接对应的页面，这样不断的遵化你抓取，你怎样解决死循环问题和页面抓取效率问题</p>
+</li>
+<li><p>一个日志文件，打印某一时刻的并发数（记录日志的条数）</p>
+</li>
+<li><p>一个数组按照固定的值排序(按照id排序)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$a = [</span><br><span class="line">　　[&apos;abc&apos;] =&gt; [&apos;id&apos; =&gt; 1, &apos;value&apos; =&gt; 233],</span><br><span class="line">　　[&apos;bcd&apos;] =&gt; [&apos;id&apos; =&gt; 2, &apos;value&apos; =&gt; 463]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数据库索引建立的原则</p>
+</li>
+<li><p>打印日志文件中，出现最多的前100个IP</p>
+</li>
+<li><p>php 和其他语言不同的地方，PHP中弱类型的实现</p>
+</li>
+<li><p>C语言中结构体和共用体的区别，每个占用做少内存（二者已给出）</p>
+</li>
+<li><p>有没有自己写的一些作品，或者开源的东西</p>
+</li>
+<li><p>秒杀怎么设计，注意点是什么</p>
+</li>
+<li><p>有没有学习新的东西，比如新的技术，语言</p>
+</li>
+<li><p>介绍一个最深刻的项目，说出技术点</p>
+</li>
+<li><p>coding：一个数组 0 - n-1，已经排好序，打印出满足 a[i]+a[j] = c 的所有i和j，说出时间复杂度</p>
+</li>
+<li><p>以后有什么打算，学习的目标或者是自己的规划目标</p>
+</li>
+<li><p>写一个类，一个单例类，输入两个数组，$arr1, $arr2，每个数组中存有整数（0-9）,这个类提供两个方法，一个是排序$arr1，一个是把两个数组当成两个大数然后进行相减，返回结果（第一个数组如果是[5, 2, 3, 4] ,相当于数字：5234）</p>
+</li>
+<li>数据库中两个笛卡尔积在join中的体现，说出left join的中间过程</li>
+<li>网站打开慢的原因和解决办法</li>
+<li><p>讲解项目的架构，redis在项目中的使用情况</p>
+</li>
+<li><p>数据库事务原理，是否使用过</p>
+</li>
+<li><p>数据库优化，索引建立原则</p>
+</li>
+<li><p>数据库事务的含义</p>
+</li>
+</ul>
+<ul>
+<li>框架使用，优缺点</li>
+<li><p>是否使用过前端框架，js，jquery是否学习过</p>
+</li>
+<li><p>给两个数组得到交集，各自的差集</p>
+</li>
+<li><p>给两张表，得到各自的交集和差集</p>
+</li>
+<li>数据库索引的字段，哪些会用到索引，该怎样查看。</li>
+<li>PHP短标签，怎样开启。结束标签有什么影响<br>  因为php只能运行在php标签里面的脚本，在脚本之外的所有字符，包括你看不见的空格或者回车，制表符号<br>  都是作为输出内容会response到客户端的。这样就有可能会产生意想不到的事情。比如说joyqi说的问题，<br>  不过这个还好问题不是很大，但是假如你在一个文件里面使用了header函数，这个文件同时又包含了另外一个文件<br>  并且被包含的文件的php标签外有空字符，这个时候会报header already send的错误。</li>
+<li>div 怎样实现三栏式布局</li>
+<li>php 各个框架的应用，php的安全相关</li>
+<li>数据库的优化，怎样保证大数据量的数据库访问正常</li>
+<li>数据库集群的特点和数据同步的机制</li>
+<li>什么是响应式设计<br>  自适应不同屏幕大小。应用 CSS3 的媒体查询(Media Queries)，创建一个包含适应各种设备尺寸样式的<br>  CSS。一旦页面在特定的设备上加载，此时，会先检测设备的视口大小，然后加载特定于设备的样式。即为不同的媒体类型设<br>  定专有的样式表。</li>
+<li><p>js闭包是什么？<br>  闭包就是能够读取其他函数内部变量的函数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">f1</span></span>()&#123;</span><br><span class="line">　　　　var n=999;</span><br><span class="line">　　　　<span class="keyword">function</span> <span class="function"><span class="title">f2</span></span>()&#123;</span><br><span class="line">　　　　　　alert(n); </span><br><span class="line">　　　　&#125;</span><br><span class="line">　　　　<span class="built_in">return</span> f2;</span><br><span class="line">　　&#125;</span><br><span class="line">　　var result=f1();</span><br><span class="line">　　result(); // 999</span><br><span class="line">　　</span><br><span class="line">　　一个是前面提到的可以读取函数内部的变量</span><br><span class="line">　　另一个就是让这些变量的值始终保持在内存中。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>mysql与mysqli的区别有哪些？<br>  mysql扩展是最早的一套面向过程的api，支持功能相对比较少<br>  mysqli 是mysql的增强版，支持面向对象，各种新特性<br>  pdo是数据驱动层，把数据层和应用层隔离开</p>
+</li>
+<li><p>php多态是什么？<br>  多态是指在面向对象中能够根据使用类的上下文来重新定义或改变类的性质和行为。<br>  <a href="http://www.qttc.net/201208172.html" target="_blank" rel="noopener">http://www.qttc.net/201208172.html</a></p>
+</li>
+<li>http状态码:200、202、301、404、500<br>  网上一查一堆</li>
+<li><p>memcache与mongoDB、Redis各自的使用场景是什么？<br>  参考: <a href="https://segmentfault.com/q/1010000002588088/a-1020000002589415" target="_blank" rel="noopener">https://segmentfault.com/q/1010000002588088/a-1020000002589415</a><br>  memcache多线程，数据结构简单，适合扛量，数据不可以持久化，不可以同步<br>  redis单线程，数据结构丰富，支持持久化，同步<br>  mongodb文档类型存储，适合存储集合类型的数据，如文章评论</p>
+</li>
+<li><p>1条微薄要推送给100万个粉丝该怎么处理？<br>  写队列中，根据数量（100万）动态调整消费者</p>
+</li>
+<li>假设给你5台机器，请大致的描述一下，如何使用你所熟悉的开源软件，搭建一个日PV 3万左右的中型网站<br>  前面2台nginx  中间一个cache   后面一主一从mysql</li>
+<li>说说你所了解的搜索引擎包含那些技术？<pre><code>爬虫（采集）、切词（分词）、索引（存储）、查询以及其他相关技术
+</code></pre></li>
+<li>使用过Memcache缓存吗，如果使用过，能够简单的描述一下它的工作原理吗？<pre><code>Memcahce是把所有的数据保存在内存当中，采用hash表的方式，
+每条数据又key和value组成，每个key是独一无二的，当要访问某个值的时候先按照找到值，然后返回结果。
+Memcahce采用LRU算法来逐渐把过期数据清除掉。
+</code></pre></li>
+<li>原型链了不了解？<br>  <a href="http://www.cnblogs.com/shuiyi/p/5305435.html" target="_blank" rel="noopener">http://www.cnblogs.com/shuiyi/p/5305435.html</a></li>
+<li><p>for与foreach哪个更快？<br>  foreach是通过GetEnumerator获得一个IEnumerator对象，通过IEnumerator对象执行MoveNext()方法和获取Current属性进行遍历的。<br>  由于Enumerator中，做了版本检查处理的工作，所以使用foreach是线程安全<br>  在一些全局的，多线程可以访问的数据结构对象，使用foreach。而对本地变量，则使用for，效率和安全兼顾！<br>  发现对于10W级以上的数组，foreach效率会更高，但对于1W级的数组，还是for效率高</p>
+</li>
+<li><p>表设计三大范式<br>  1．第一范式(确保每列保持原子性)</p>
+<pre><code>所有字段值都是不可分解的原子值
+</code></pre><p>  2．第二范式(确保表中的每列都和主键相关)</p>
+<pre><code>也就是说在一个数据库表中，一个表中只能保存一种数据，不可以把多种数据保存在同一张数据库表中。
+</code></pre><p>  3．第三范式(确保每列都和主键列直接相关,而不是间接相关)</p>
+<pre><code>每一列数据都和主键直接相关，而不能间接相关。
+</code></pre></li>
+<li><p>数据库设计经验,为什么进行分表? 分库?一般多少数据量开始分表? 分库? 分库分表的目的? 什么是数据库垂直拆分? 水平拆分? 分区等等？可以举例说明<br>  随着数据量增大首先考虑的是分库，按业务把相关模块的表放到一个库中。<br>  数据再大的时候就需要考虑分表（横向，纵向）<br>  分区主要是用于时间顺序明显的场景，比如日志</p>
+</li>
+<li><p>web开发方面会遇到哪些缓存? 分别如何优化?<br>  文件缓存，内存缓存，对象缓存</p>
+</li>
+<li><p>给你256M的内存,对10G的文件进行排序(文件每行1个数字),如何实现？对10G的文件进行查找如何实现？统计10G文件每个关键字出现的次数如何实现？</p>
+</li>
+<li><p>考察大文件处理  就是文件一下load到内存肯定不行 方法也就是分段读，具体实现也就是下面2中方法，没发现其他方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">方法一：生成器</span><br><span class="line">function getRows($file) &#123;</span><br><span class="line">    $handle = fopen($file, &apos;rb&apos;);</span><br><span class="line">    if ($handle === false) &#123;</span><br><span class="line">        throw new Exception();</span><br><span class="line">    &#125;</span><br><span class="line">    //feof()函数检测是否到达文件末尾</span><br><span class="line">    while (feof($handle) === false) &#123;</span><br><span class="line">        //fgetcsv()一次读取csv文件的一行</span><br><span class="line">        yield fgetcsv($handle);</span><br><span class="line">    &#125;</span><br><span class="line">    fclose($handle)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foreach (getRows(&apos;data.csv&apos;) as $row) &#123;</span><br><span class="line">    print_r($row);</span><br><span class="line">&#125;</span><br><span class="line">方法二：文件指针</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>从你的经验方面谈一下如何构建高性能web站点? 需要哪些环节? 步骤? 每个步骤需要注意什么如何优化等?<br>    同上，具体场景具体分析。</p>
+<ul>
+<li>为什么要对数据库进行主从分离?<br>  因为顺序读写比随机读写快 </li>
+<li><p>如何处理多服务器共享session?</p>
+</li>
+<li><p>存储session到memcache、redis中</p>
+</li>
+<li>一个10G的表,你用php程序统计某个字段出现的次数,思路是?</li>
+<li>表指的是文件的话参考上面的生成器做法</li>
+<li><p>表指的是数据库里的表的话 加上索引 一条SQL没啥问题</p>
+</li>
+<li><p>会告诉你一个nginx日志例子,用你认为最佳的编程语言统计一下http响应时间超过1秒的前10个url?</p>
+</li>
+<li><p>给你两个路径a和b,写一个算法或思路计算a和b差距几层并显示a和b的交集?</p>
+</li>
+<li><p>给你一个url,在nginx配置一下rewrite指定到某个具体路径?</p>
+</li>
+<li><p>一个php文件的解释过程是? 一般加速php有哪些?  提高php整体性能会用到哪些技术?</p>
+</li>
+<li><p>session和cookie生存周期区别? 存储位置区别?<br>session存储在服务器位置上，可以通过php.ini里面配置session相关配置<br>cookie存储在客户端上的上（其实可以分两种：<br>1，持久性cookie，设置了cookie的时间，以文件方式存在硬盘上，<br>2，会话cookie，没有设置cookie时间，cookie的生命周期也就是关闭浏览器前就消失，一般不会保存在硬盘，而是保存在内存上）</p>
+</li>
+<li><p>require、include、require_once、include_once区别? 加载区别? 如果程序按需加载某个php文件你如何实现?<br>包含的文件有错误<br>include()会产生一个警告，<br>require()则导致一个致命的错误（出现错误，脚本停止执行）<br>对include()语句来说，在执行文件时每次都要进行读取和评估；<br>include 产生一个 warning ，而 require 直接产生错误中断；<br>require 在运行前载入；<br>include 在运行时载入；<br>require_once 和 include_once 可以避免重复包含同一文件。</p>
+</li>
+<li><p>chrome号称为多线程的,所以多线程和多进程的区别为?<br>进程是资源分配最小单位<br>线程是cpu调度最下单位<br>同一进程下的线程共享内存数据</p>
+</li>
+<li><p>php在2011年底出现hash碰撞,hash碰撞原理为? 如何进行修复?<br><a href="http://blog.codinglabs.org/articles/hash-collisions-attack-on-php.html" target="_blank" rel="noopener">http://blog.codinglabs.org/articles/hash-collisions-attack-on-php.html</a></p>
+</li>
+<li><p>php是用单链表解决hash冲突的<br>原理: 哈希表碰撞攻击就是通过精心构造数据，使得所有数据全部碰撞，人为将哈希表变成一个退化的单链表，此时哈希表各种操作的时间均提升了一个数量级，因此会消耗大量CPU资源，导致系统无法快速响应请求，从而达到拒绝服务攻击（DoS）的目的。</p>
+</li>
+<li><p>POST攻击<br>当然，一般情况下很难遇到攻击者可以直接修改PHP代码的情况，但是攻击者仍可以通过一些方法间接构造哈希表来进行攻击。例如PHP会将接收到的HTTP POST请求中的数据构造为POST，而这是一个Array，内部就是通过Zend HashTable表示，因此攻击者只要构造一个含有大量碰撞key的post请求，就可以达到攻击的目的。具体做法不再演示。<br>POST攻击的防护<br>针对POST方式的哈希碰撞攻击，目前PHP的防护措施是控制POST数据的数量。在&gt;=PHP5.3.9的版本中增加了一个配置项max_input_vars，用于标识一次http请求最大接收的参数个数，默认为1000。因此PHP5.3.x的用户可以通过升级至5.3.9来避免哈希碰撞攻击。5.2.x的用户可以使用这个patch：<a href="http://www.laruence.com/2011/12/30/2440.html。" target="_blank" rel="noopener">http://www.laruence.com/2011/12/30/2440.html。</a><br>另外的防护方法是在Web服务器层面进行处理，例如限制http请求body的大小和参数的数量等，这个是现在用的最多的临时处理方案。具体做法与不同Web服务器相关，不再详述。<br>其它防护<br>上面的防护方法只是限制POST数据的数量，而不能彻底解决这个问题。例如，如果某个POST字段是一个json数据类型，会被PHP json_decode，那么只要构造一个超大的json攻击数据照样可以达到攻击目的。理论上，只要PHP代码中某处构造Array的数据依赖于外部输入，则都可能造成这个问题，因此彻底的解决方案要从Zend底层HashTable的实现动手。一般来说有两种方式，一是限制每个桶链表的最长长度；二是使用其它数据结构如红黑树取代链表组织碰撞哈希（并不解决哈希碰撞，只是减轻攻击影响，将N个数据的操作时间从O(N^2)降至O(NlogN)，代价是普通情况下接近O(1)的操作均变为O(logN)）。</p>
+</li>
+<li><p>web不安全因素有哪些? 分别如何防范?<br><a href="https://zhuanlan.zhihu.com/p/28821512" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/28821512</a><br>sql注入<br>xss<br>csrf   </p>
+</li>
+<li><p>假如两个单链表相交,写一个最优算法计算交点位置,说思路也可以?<br>  <a href="http://www.jianshu.com/p/9a953e4ad2cd" target="_blank" rel="noopener">http://www.jianshu.com/p/9a953e4ad2cd</a><br>  相交：俩单列表都包含同一个节点（不是节点值相同），那么交点之后的值肯定也是一样的了<br>  单列表无环：</p>
+<pre><code>如果两条单链表相交，则将链表B，连接到链表A后面，如图所示（上面的链表是A，下面的链表是B），会形成环路，且链表B的表头一定在环上。因此我们只需要从链表B开始遍历，如果可以回到链表B的头结点，则说明两条链表相交。
+时间复杂度：O(len(A)+len(B))
+单链表相交，意味着相交结点具有相同的内存地址，且相交结点后的所有结点是两个链表共有的。因此如果两个链表相交，则最后一个节点肯定是相同的，因此只需要判断两个链表的最优一个节点是否相同。
+时间复杂度： O(len(A)+len(B))
+</code></pre></li>
+<li><p>nginx负载均衡有哪些? 如果其中一台服务器挂掉,报警机制如何实现?</p>
+</li>
+<li><p>Nginx负载均衡有4种方案配置<br>  轮询 Round Robin，根据Nginx配置文件中的顺序，依次把客户端的Web请求分发到不同的后端服务器上<br>  最少连接 least_conn; Web请求会被转发到连接数最少的服务器上。<br>  IP地址哈希 ip_hash;<br>  基于权重 weight<br>  fair。这是比上面两个更加智能的负载均衡算法。此种算法可以依据页面大小和加载时间长短智能地进行负载均衡，也就是根据后端服务器的响应时间来分配请求，响应时间短的优先分配。Nginx本身是不支持fair的，如果需要使用这种调度算法，必须下载Nginx的upstream_fair模块。<br>  url_hash。此方法按访问url的hash结果来分配请求，使每个url定向到同一个后端服务器，可以进一步提高后端缓存服务器的效率。Nginx本身是不支持url_hash的，如果需要使用这种调度算法，必须安装Nginx 的hash软件包。</p>
+</li>
+<li><p>报警机制如何实现，实在不get不到考点，一般这种服务的原理就是俩机器之间有心跳检测，调度服务器收不到心跳就认为宕机就会被踢掉<br>可以引入监控平台如zabbix，能更好的监控。</p>
+</li>
+<li><p>nginx设置缓存js、css、图片等信息,缓存的实现原理是?</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">一：nginx作为源服务器</span><br><span class="line">    location ~* \.(?:jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc)$ &#123;</span><br><span class="line">      expires 1M;</span><br><span class="line">      access_log off;</span><br><span class="line">      add_header Cache-Control &quot;public&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    请求直接打到源服务器，会通过配置产生如下的响应头</span><br><span class="line">    HTTP/1.1 200 OK</span><br><span class="line">    Server: nginx/1.4.6 (Ubuntu)</span><br><span class="line">    Date: Fri, 05 Sep 2014 23:25:04 GMT</span><br><span class="line">    Content-Type: text/css</span><br><span class="line">    Last-Modified: Fri, 05 Sep 2014 22:46:39 GMT</span><br><span class="line">    Expires: Sat, 05 Sep 2015 23:25:04 GMT</span><br><span class="line">    Cache-Control: max-age=31536000  过期时间</span><br><span class="line">    Cache-Control: public   谁都可以缓存</span><br><span class="line"></span><br><span class="line">    二：nginx作为缓存服务器，在源服务器之前，类似于varnish，可以配置为单纯的转发，下面配置会解析源服务器响应并缓存</span><br><span class="line">    proxy_cache_path /tmp/nginx levels=1:2 keys_zone=my_zone:10m inactive=60m;</span><br><span class="line">    proxy_cache_key &quot;$scheme$request_method$host$request_uri&quot;;</span><br><span class="line">    </span><br><span class="line">    server &#123;</span><br><span class="line">        # Note that it&apos;s listening on port 80</span><br><span class="line">        listen 80 default_server;</span><br><span class="line">        root /var/www/;</span><br><span class="line">        index index.html index.htm;</span><br><span class="line">    </span><br><span class="line">        server_name example.com www.example.com;</span><br><span class="line">    </span><br><span class="line">        charset utf-8;</span><br><span class="line">    </span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_cache my_zone;</span><br><span class="line">            add_header X-Proxy-Cache $upstream_cache_status;</span><br><span class="line">    </span><br><span class="line">            include proxy_params;</span><br><span class="line">            proxy_pass http://172.17.0.18:9000;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如何提高缓存命中率? 如何对缓存进行颗粒化?<br>  细粒度，分层</p>
+</li>
+<li>php的内存回收机制是?<br>  5.3是引用计数，之后对引用计数做了优化，算法没看懂网上也没找到将明白的文章<br>  1、并不是每次refcount减少时都进入回收周期，只有根缓冲区满额后在开始垃圾回收。<br>  2、可以解决循环引用问题。<br>  3、可以总将内存泄露保持在一个阈值以下。</li>
+<li><p>memcache magent 分布式设计？</p>
+</li>
+<li><p>redis 分布式设计，如何设计？</p>
+</li>
+<li><p>mongo 集群架构是怎样的？</p>
+</li>
+<li><p>闭包<br>各种专业文献上的”闭包”（closure）定义非常抽象，很难看懂。我的理解是，闭包就是能够读取其他函数内部变量的函数。<br>由于在Javascript语言中，只有函数内部的子函数才能读取局部变量，因此可以把闭包简单理解成”定义在一个函数内部的函数”。<br>所以，在本质上，闭包就是将函数内部和函数外部连接起来的一座桥梁。<br>闭包可以用在许多地方。它的最大用处有两个，一个是前面提到的可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中。</p>
+</li>
+<li>PHP的MySQL扩展<br>  设计开发允许PHP应用与MySQL数据库交互的早期扩展。mysql扩展提供了一个面向过程 的接口，<br>  并且是针对MySQL4.1.3或更早版本设计的。因此，这个扩展虽然可以与MySQL4.1.3或更新的数<br>  据库服务端 进行交互，但并不支持后期MySQL服务端提供的一些特性。</li>
+<li>PHP的mysqli扩展<br>  mysqli扩展，我们有时称之为MySQL增强扩展，可以用于使用 MySQL4.1.3或更新版本中新的高级特性。<br>  mysqli扩展在PHP 5及以后版本中包含。<br>  mysqli扩展有一系列的优势，相对于mysql扩展的提升主要有：<br>  面向对象接口<br>  prepared语句支持<br>  多语句执行支持<br>  事务支持<br>  增强的调试能力<br>  嵌入式服务支持</li>
+<li>PHP数据对象(PDO)<br>PHP数据对象，是PHP应用中的一个数据库抽象层规范。PDO提供了一个统一的API接口可以<br>使得你的PHP应用不去关心具体要 连接的数据库服务器系统类型。也就是说，<br>如果你使用PDO的API，可以在任何需要的时候无缝切换数据库服务器</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您请我喝咖啡！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/WeChat.png" alt="Hiven WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/Alipay.jpg" alt="Hiven Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/job/" rel="tag"># job</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/nginx-lua.html" rel="next" title="lua鉴权">
+                <i class="fa fa-chevron-left"></i> lua鉴权
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/大数据处理问题.html" rel="prev" title="大数据处理问题">
+                大数据处理问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/hiven.gif"
+               alt="Hiven" />
+          <p class="site-author-name" itemprop="name">Hiven</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hiven</span>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://hiven09.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+		  this.language = "zh";
+          this.page.url = 'https://hiven09.github.io/面试问题.html';
+          this.page.identifier = '面试问题.html';
+          this.page.title = '面试';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://hiven09.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

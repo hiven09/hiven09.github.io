@@ -1,0 +1,1238 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="php,支付宝," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="支付宝进行app支付准备工作支付宝支付的官方服务端demo 项目背景，多个商家在同一个平台支付，根据商家号去查询商家的appid(支付宝分配给开发者的应用ID)支付宝的应用公钥和私钥以及通过应用公钥生成的支付宝公钥可以多个商家公用一个(方便，给个赞) 商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用RSA2 支付宝审核效率较快  首先说一下服务商版，可以到这里看看介绍 h">
+<meta name="keywords" content="php,支付宝">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php支付宝多账号支付">
+<meta property="og:url" content="https://hiven09.github.io/php-wechat.html">
+<meta property="og:site_name" content="Hiven">
+<meta property="og:description" content="支付宝进行app支付准备工作支付宝支付的官方服务端demo 项目背景，多个商家在同一个平台支付，根据商家号去查询商家的appid(支付宝分配给开发者的应用ID)支付宝的应用公钥和私钥以及通过应用公钥生成的支付宝公钥可以多个商家公用一个(方便，给个赞) 商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用RSA2 支付宝审核效率较快  首先说一下服务商版，可以到这里看看介绍 h">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-18T10:03:06.212Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="php支付宝多账号支付">
+<meta name="twitter:description" content="支付宝进行app支付准备工作支付宝支付的官方服务端demo 项目背景，多个商家在同一个平台支付，根据商家号去查询商家的appid(支付宝分配给开发者的应用ID)支付宝的应用公钥和私钥以及通过应用公钥生成的支付宝公钥可以多个商家公用一个(方便，给个赞) 商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用RSA2 支付宝审核效率较快  首先说一下服务商版，可以到这里看看介绍 h">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hiven09.github.io/php-wechat.html"/>
+
+
+
+
+
+  <title>php支付宝多账号支付 | Hiven</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b568ca553ada1a11e6e4283e2426a605";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hiven</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Hiven blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://hiven09.github.io/php-wechat.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hiven">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/hiven.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hiven">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">php支付宝多账号支付</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-18T12:00:00+08:00">
+                2017-03-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/php-wechat.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="php-wechat.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="支付宝进行app支付"><a href="#支付宝进行app支付" class="headerlink" title="支付宝进行app支付"></a>支付宝进行app支付</h2><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>支付宝支付的官方<a href="https://docs.open.alipay.com/54/106370/" target="_blank" rel="noopener">服务端demo</a></p>
+<p>项目背景，多个商家在同一个平台支付，根据商家号去查询商家的appid(支付宝分配给开发者的应用ID)<br>支付宝的应用公钥和私钥以及通过应用公钥生成的支付宝公钥可以多个商家公用一个(方便，给个赞)</p>
+<p>商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用RSA2</p>
+<p>支付宝审核效率较快</p>
+<ul>
+<li>首先说一下服务商版，可以到这里看看介绍 <a href="https://pay.weixin.qq.com/service_provider/index.shtml" target="_blank" rel="noopener">https://pay.weixin.qq.com/service_provider/index.shtml</a></li>
+</ul>
+<p>服务商版的微信支付开发文档在这里 <a href="https://pay.weixin.qq.com/wiki/doc/api/sl.html" target="_blank" rel="noopener">https://pay.weixin.qq.com/wiki/doc/api/sl.html</a></p>
+<p>这里主要说一下从原来的普通的账号转变为接入服务商要做哪些改变</p>
+<p>这是第一个注意的地方<br>以刷卡支付为例，可以对比看到，多了两个参数sub_appid,sub_mch_id，这两个参数填你原来账号的。<br>而appid,mch_id填服务商的，服务商会给你的</p>
+<p>如果是微信公众账号内h5支付<br>要求传openid和sub_openid,这里只传sub_openid即可，内容填以前获取的openid，不变</p>
+<p>另外，再提醒下，微信app支付比较特殊，它的appid和其它的支付使用的appid是不相同的<br>微信app支付的appid去open.weixin.qq.com查看<br>而其它的支付的appid去mp.weixin.qq.com查看</p>
+<p>加密(重点)<br>加密使用商户给的key，自己以前的key已经无效了。</p>
+<p>支付目录<br>开通商户后，商户会叫你提供appid和支付目录，这时自己设置的支付目录已经无效。<br>注意区分正式目录和测试目录，若使用测试目录，必须要把个人微信号填入白名单切必须要在微信公众账号里打开支付链接。</p>
+<p>话不多说，开始</p>
+<h3 id="支付宝支付请求"><a href="#支付宝支付请求" class="headerlink" title="支付宝支付请求"></a>支付宝支付请求</h3><p>支付宝支付都是json格式</p>
+<h4 id="起调"><a href="#起调" class="headerlink" title="起调"></a>起调</h4><ul>
+<li>支付宝支付起调</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">function</span> <span class="function"><span class="title">alipay_app</span></span>()&#123;</span><br><span class="line">	//构造业务请求参数的集合(订单信息)</span><br><span class="line">	<span class="variable">$content</span> = array();</span><br><span class="line">	<span class="variable">$content</span>[<span class="string">'subject'</span>] = <span class="variable">$this</span>-&gt;subject;//商品的标题/交易标题/订单标题/订单关键字等</span><br><span class="line">	<span class="variable">$content</span>[<span class="string">'out_trade_no'</span>] = <span class="variable">$this</span>-&gt;out_trade_no;//商户网站唯一订单号</span><br><span class="line">	<span class="variable">$content</span>[<span class="string">'timeout_express'</span>] = <span class="variable">$this</span>-&gt;timeout_express;//商品的标题/交易标题/订单标题/订单关键字等</span><br><span class="line">	<span class="variable">$content</span>[<span class="string">'total_amount'</span>] = floatval(<span class="variable">$this</span>-&gt;total_amount);//订单总金额(必须定义成浮点型)</span><br><span class="line">	<span class="variable">$content</span>[<span class="string">'product_code'</span>] = <span class="variable">$this</span>-&gt;product_code;//销售产品码，商家和支付宝签约的产品码，为固定值QUICK_MSECURITY_PAY</span><br><span class="line">	<span class="variable">$con</span> = json_encode(<span class="variable">$content</span>);//<span class="variable">$content</span>是biz_content的值,将之转化成字符串</span><br><span class="line">	//构造公共参数</span><br><span class="line">	<span class="built_in">unset</span>(<span class="variable">$parameter</span>);</span><br><span class="line">	<span class="variable">$parameter</span> = array(</span><br><span class="line">		<span class="string">"app_id"</span> =&gt; <span class="variable">$this</span>-&gt;app_id,//支付宝分配给开发者的应用ID</span><br><span class="line">		<span class="string">"method"</span> =&gt; <span class="variable">$this</span>-&gt;method,//接口名称</span><br><span class="line">		<span class="string">"charset"</span> =&gt; <span class="variable">$this</span>-&gt;charset,//请求使用的编码格式</span><br><span class="line">		<span class="string">"sign_type"</span> =&gt; <span class="variable">$this</span>-&gt;sign_type,//商户生成签名字符串所使用的签名算法类型</span><br><span class="line">		<span class="string">"timestamp"</span>  =&gt; date(<span class="string">"Y-m-d H:i:s"</span>),//发送请求的时间</span><br><span class="line">		<span class="string">"version"</span>	=&gt; <span class="variable">$this</span>-&gt;version,//调用的接口版本，固定为：1.0</span><br><span class="line">		<span class="string">"notify_url"</span>  =&gt; <span class="variable">$this</span>-&gt;notify_url,//支付宝服务器主动通知地址</span><br><span class="line">		<span class="string">"biz_content"</span>  =&gt; <span class="variable">$con</span>,//业务请求参数的集合,长度不限,json格式</span><br><span class="line">	);</span><br><span class="line">	//生成签名</span><br><span class="line">	<span class="variable">$Client</span> = new AopClient();</span><br><span class="line">	<span class="variable">$paramStr</span> = <span class="variable">$Client</span>-&gt;getSignContent(<span class="variable">$parameter</span>);//签名字符串</span><br><span class="line">	<span class="variable">$sign</span> = <span class="variable">$Client</span>-&gt;alonersaSign(<span class="variable">$paramStr</span>,<span class="variable">$this</span>-&gt;rsaPrivateKey,<span class="variable">$this</span>-&gt;sign_type);</span><br><span class="line">	<span class="variable">$parameter</span>[<span class="string">'sign'</span>] = <span class="variable">$sign</span>;</span><br><span class="line">	writeLog(<span class="string">"| APP支付 | 参数 | "</span>.json_encode(<span class="variable">$parameter</span>), config(<span class="string">'PAY_LOG'</span>),<span class="string">'alipay'</span>);</span><br><span class="line">	<span class="variable">$str</span> = <span class="variable">$Client</span>-&gt;getSignContentUrlencode(<span class="variable">$parameter</span>);</span><br><span class="line">	<span class="built_in">return</span> <span class="variable">$str</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="回调"><a href="#回调" class="headerlink" title="回调"></a>回调</h4><ul>
+<li>支付宝支付回调</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">function</span> <span class="function"><span class="title">notifyPay</span></span>()&#123;</span><br><span class="line">	//验证生成签名</span><br><span class="line">	<span class="variable">$Client</span> = new AopClient(<span class="variable">$this</span>-&gt;alipayrsaPublicKey);</span><br><span class="line">	<span class="variable">$verify_result</span> = <span class="variable">$Client</span>-&gt;rsaCheckV1(<span class="variable">$_POST</span>,null);</span><br><span class="line">	writeLog(<span class="string">"| 支付回调 | 数据验证 | "</span>.json_encode(<span class="variable">$verify_result</span>),config(<span class="string">'PAY_LOG'</span>),<span class="string">'alipay'</span>);</span><br><span class="line">	<span class="keyword">if</span>(<span class="variable">$verify_result</span>) &#123;//验证成功</span><br><span class="line">		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span><br><span class="line">		//请在这里加上商户的业务逻辑程序代</span><br><span class="line">		//——请根据您的业务逻辑来编写程序（以下代码仅作参考）——</span><br><span class="line">		//获取支付宝的通知返回参数，可参考技术文档中服务器异步通知参数列表</span><br><span class="line">		//商户订单号</span><br><span class="line">		<span class="variable">$out_trade_no</span> = <span class="variable">$_POST</span>[<span class="string">'out_trade_no'</span>];</span><br><span class="line">		//支付宝交易号</span><br><span class="line">		<span class="variable">$trade_no</span> = <span class="variable">$_POST</span>[<span class="string">'trade_no'</span>];</span><br><span class="line">		//交易状态</span><br><span class="line">		<span class="variable">$trade_status</span> = <span class="variable">$_POST</span>[<span class="string">'trade_status'</span>];</span><br><span class="line">		<span class="keyword">if</span>(<span class="variable">$_POST</span>[<span class="string">'trade_status'</span>] == <span class="string">'TRADE_FINISHED'</span>) &#123;</span><br><span class="line">			<span class="built_in">return</span> <span class="string">'success'</span>;</span><br><span class="line">			//判断该笔订单是否在商户网站中已经做过处理</span><br><span class="line">			//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序</span><br><span class="line">			//请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的</span><br><span class="line">			//如果有做过处理，不执行商户的业务程序</span><br><span class="line">			//注意：</span><br><span class="line">			//退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知</span><br><span class="line">			//调试用，写文本函数记录程序运行情况是否正常</span><br><span class="line">			//logResult(<span class="string">"这里写入想要调试的代码变量值，或其他运行的结果记录"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (<span class="variable">$_POST</span>[<span class="string">'trade_status'</span>] == <span class="string">'TRADE_SUCCESS'</span>) &#123;</span><br><span class="line">			<span class="built_in">return</span> <span class="string">'success'</span>;</span><br><span class="line">			//判断该笔订单是否在商户网站中已经做过处理</span><br><span class="line">			//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序</span><br><span class="line">			//请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的</span><br><span class="line">			//如果有做过处理，不执行商户的业务程序</span><br><span class="line">			//注意：</span><br><span class="line">			//付款完成后，支付宝系统发送该交易状态通知</span><br><span class="line">			//调试用，写文本函数记录程序运行情况是否正常</span><br><span class="line">			//logResult(<span class="string">"这里写入想要调试的代码变量值，或其他运行的结果记录"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (<span class="variable">$_POST</span>[<span class="string">'trade_status'</span>] == <span class="string">'TRADE_CLOSED'</span>) &#123;</span><br><span class="line">			<span class="built_in">return</span> <span class="string">'success'</span>;</span><br><span class="line">			//判断该笔订单是否在商户网站中已经做过处理</span><br><span class="line">			//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序</span><br><span class="line">			//请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的</span><br><span class="line">			//如果有做过处理，不执行商户的业务程序</span><br><span class="line">			//注意：</span><br><span class="line">			//付款完成后，支付宝系统发送该交易状态通知</span><br><span class="line">			//调试用，写文本函数记录程序运行情况是否正常</span><br><span class="line">			//logResult(<span class="string">"这里写入想要调试的代码变量值，或其他运行的结果记录"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——</span><br><span class="line">		<span class="built_in">return</span> <span class="string">'fail'</span>;</span><br><span class="line">		//<span class="built_in">echo</span> <span class="string">"success"</span>;	 //请不要修改或删除</span><br><span class="line">		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="built_in">return</span> <span class="string">'fail'</span>;</span><br><span class="line">		//验证失败</span><br><span class="line">		// <span class="built_in">echo</span> <span class="string">"fail"</span>;</span><br><span class="line">		//调试用，写文本函数记录程序运行情况是否正常</span><br><span class="line">		//logResult(<span class="string">"这里写入想要调试的代码变量值，或其他运行的结果记录"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="退款"><a href="#退款" class="headerlink" title="退款"></a>退款</h4><ul>
+<li>支付宝支付退款</li>
+</ul>
+<pre><code class="bash">public <span class="keyword">function</span> refund(<span class="variable">$param</span>){
+    <span class="variable">$parameter</span> = <span class="variable">$result</span> = [];
+    try {
+        <span class="variable">$aop</span> = new AopClient();
+        <span class="variable">$aop</span>-&gt;gatewayUrl = <span class="string">'https://openapi.alipay.com/gateway.do'</span>;
+        <span class="variable">$aop</span>-&gt;appId = <span class="variable">$this</span>-&gt;app_id;
+        <span class="variable">$aop</span>-&gt;rsaPrivateKey = <span class="variable">$this</span>-&gt;rsaPrivateKey;
+        <span class="variable">$aop</span>-&gt;alipayrsaPublicKey = <span class="variable">$this</span>-&gt;alipayrsaPublicKey;
+        <span class="variable">$aop</span>-&gt;apiVersion = <span class="string">'1.0'</span>;
+        <span class="variable">$aop</span>-&gt;signType = <span class="string">'RSA'</span>;
+        <span class="variable">$aop</span>-&gt;postCharset=<span class="string">'UTF-8'</span>;
+        <span class="variable">$aop</span>-&gt;format=<span class="string">'json'</span>;
+        <span class="variable">$parameter</span> = [
+            <span class="string">"trade_no"</span> =&gt; <span class="variable">$param</span>[<span class="string">'trade_no'</span>],
+            <span class="string">"out_trade_no"</span> =&gt; <span class="variable">$param</span>[<span class="string">'out_trade_no'</span>],
+            <span class="string">"out_request_no"</span> =&gt; <span class="variable">$param</span>[<span class="string">'out_request_no'</span>],
+            <span class="string">"refund_reason"</span> =&gt; <span class="string">'正常退款'</span>,
+            <span class="string">"refund_amount"</span>=&gt;<span class="variable">$param</span>[<span class="string">'refund_money'</span>],
+        ];
+        <span class="variable">$request</span> = new request\AlipayTradeRefundRequest ();
+        <span class="variable">$request</span>-&gt;setBizContent(json_encode(<span class="variable">$parameter</span>));
+        <span class="variable">$result</span> = <span class="variable">$aop</span>-&gt;execute (<span class="variable">$request</span>);
+        <span class="variable">$responseNode</span> = <span class="string">'alipay_trade_refund_response'</span>;//str_replace(<span class="string">"."</span>, <span class="string">"_"</span>, <span class="variable">$request</span>-&gt;getApiMethodName()) . <span class="string">"_response"</span>;
+        <span class="variable">$data</span> = <span class="variable">$result</span>-&gt;<span class="variable">$responseNode</span>;
+        <span class="variable">$resultCode</span> = <span class="variable">$data</span>-&gt;code;
+        <span class="keyword">if</span>(empty(<span class="variable">$resultCode</span>) || <span class="variable">$resultCode</span> != 10000){
+            <span class="variable">$m</span> = <span class="variable">$data</span>-&gt;sub_msg?<span class="variable">$data</span>-&gt;sub_msg:<span class="variable">$data</span>-&gt;msg;
+            throw new \Exception(<span class="variable">$m</span>, 1);
+        }
+        <span class="variable">$ret</span>[<span class="string">'status'</span>] = <span class="string">'success'</span>;
+        <span class="variable">$ret</span>[<span class="string">'msg'</span>] = <span class="string">'退款成功'</span>;
+        <span class="variable">$ret</span>[<span class="string">'data'</span>] = <span class="variable">$data</span>;
+    } catch (\Exception <span class="variable">$e</span>) {
+        <span class="variable">$ret</span>[<span class="string">'status'</span>] = <span class="string">'fail'</span>;
+        <span class="variable">$ret</span>[<span class="string">'msg'</span>] = <span class="variable">$e</span>-&gt;getMessage();
+    }
+    writeLog(<span class="string">"| 支付宝退款 | {<span class="variable">$ret</span>['status']}-{<span class="variable">$ret</span>['msg']} | 参数:"</span>.json_encode(<span class="variable">$parameter</span>).<span class="string">" | 结果:"</span>.json_encode(<span class="variable">$result</span>), config(<span class="string">'PAY_LOG'</span>),<span class="string">'refund'</span>);
+    <span class="built_in">return</span> <span class="variable">$ret</span>;
+}
+</code></pre>
+<p>支付宝支付相对比较简单，有什么问题可以联系我喔！</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您请我喝咖啡！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/WeChat.png" alt="Hiven WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/Alipay.jpg" alt="Hiven Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+            <a href="/tags/支付宝/" rel="tag"># 支付宝</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/php-ailpay.html" rel="next" title="php微信多账号支付">
+                <i class="fa fa-chevron-left"></i> php微信多账号支付
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/php-regex.html" rel="prev" title="正则解说">
+                正则解说 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/hiven.gif"
+               alt="Hiven" />
+          <p class="site-author-name" itemprop="name">Hiven</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#支付宝进行app支付"><span class="nav-number">1.</span> <span class="nav-text">支付宝进行app支付</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">1.1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支付宝支付请求"><span class="nav-number">1.2.</span> <span class="nav-text">支付宝支付请求</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#起调"><span class="nav-number">1.2.1.</span> <span class="nav-text">起调</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#回调"><span class="nav-number">1.2.2.</span> <span class="nav-text">回调</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#退款"><span class="nav-number">1.2.3.</span> <span class="nav-text">退款</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hiven</span>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://hiven09.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+		  this.language = "zh";
+          this.page.url = 'https://hiven09.github.io/php-wechat.html';
+          this.page.identifier = 'php-wechat.html';
+          this.page.title = 'php支付宝多账号支付';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://hiven09.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
