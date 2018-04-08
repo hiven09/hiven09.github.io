@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="微信,php," />
+  <meta name="keywords" content="php,微信," />
 
 
 
@@ -80,7 +80,7 @@
 
 
 <meta name="description" content="微信多同一商户多门店支付，类似美团商家支付">
-<meta name="keywords" content="微信,php">
+<meta name="keywords" content="php,微信">
 <meta property="og:type" content="article">
 <meta property="og:title" content="php微信多账号支付">
 <meta property="og:url" content="https://hiven09.github.io/php-ailpay.html">
@@ -442,9 +442,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/微信/" rel="tag"># 微信</a>
+            <a href="/tags/php/" rel="tag"><i class="fa fa-tag"></i>php</a>
           
-            <a href="/tags/php/" rel="tag"># php</a>
+            <a href="/tags/微信/" rel="tag"><i class="fa fa-tag"></i>微信</a>
           
         </div>
       
@@ -811,6 +811,28 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: true,
+        notify: false,
+        appId: '2LwvPsOBw2NuUCuV30kFCIim-gzGzoHsz',
+        appKey: 'GHt3pq6QoJgMGzaARWKBUKxV',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 
