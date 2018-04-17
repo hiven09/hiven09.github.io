@@ -87,12 +87,16 @@
 <meta property="og:site_name" content="Hiven">
 <meta property="og:description" content="浏览器输入URL后发生了什么">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://hiven09.github.io/hiven/public/images/2075673-3afda32a13a68c6b.png">
-<meta property="og:updated_time" content="2018-04-17T06:48:11.123Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2075673-3afda32a13a68c6b.png">
+<meta property="og:image" content="https://img-blog.csdn.net/20170104214009596?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2h1c2xlaQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2075673-1f2c0829b7a86c6d.png">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2075673-a7d5616fac0adec7.png">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2075673-e6b92f5c6c8c50d4.png">
+<meta property="og:updated_time" content="2018-04-17T07:41:49.112Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="URL流程">
 <meta name="twitter:description" content="浏览器输入URL后发生了什么">
-<meta name="twitter:image" content="https://hiven09.github.io/hiven/public/images/2075673-3afda32a13a68c6b.png">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2075673-3afda32a13a68c6b.png">
 
 
 
@@ -318,8 +322,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-23T12:00:00+08:00">
-                2017-10-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-10T12:00:00+08:00">
+                2017-11-10
               </time>
             
 
@@ -409,12 +413,57 @@
       
 
       
-        <ol>
-<li><p>先上图</p>
-<p>直接看图</p>
-<p><img src="/hiven\public\images\2075673-3afda32a13a68c6b.png" alt=""></p>
-</li>
-</ol>
+        <h3 id="1-先上图"><a href="#1-先上图" class="headerlink" title="1.先上图"></a>1.先上图</h3><p>直接看图</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2075673-3afda32a13a68c6b.png" alt=""></p>
+<h3 id="2-详说过程"><a href="#2-详说过程" class="headerlink" title="2.详说过程"></a>2.详说过程</h3><h4 id="2-1-DNS域名解析"><a href="#2-1-DNS域名解析" class="headerlink" title="2.1 DNS域名解析"></a>2.1 DNS域名解析</h4><ul>
+<li>在浏览器DNS缓存中搜索</li>
+<li>在操作系统DNS缓存中搜索</li>
+<li>读取系统hosts文件，查找其中是否有对应的ip</li>
+<li>向本地配置的首选DNS服务器发起域名解析请求</li>
+</ul>
+<h4 id="2-2-建立TCP连接"><a href="#2-2-建立TCP连接" class="headerlink" title="2.2 建立TCP连接"></a>2.2 建立TCP连接</h4><p>​    为了准确地传输数据，TCP协议采用了三次握手策略。发送端首先发送一个带SYN（synchronize）标志的数据包给接收方，接收方收到后，回传一个带有SYN/ACK(acknowledegment)标志的数据包以示传达确认信息。最后发送方再回传一个带ACK标志的数据包，代表握手结束。在这过程中若出现问题中断，TCP会再次发送相同的数据包。<br>    TCP是一个端到端的可靠的面向连接的协议，所以HTTP基于传输层TCP协议不用担心数据的传输的各种问题。</p>
+<p><img src="https://img-blog.csdn.net/20170104214009596?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2h1c2xlaQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></p>
+<p>中断连接端可以是Client端，也可以是Server端</p>
+<blockquote>
+<p>​    假设Client端发起中断连接请求，也就是发送FIN报文。Server端接到FIN报文后，意思是说”我Client端没有数据要发给你了”，但是如果你还有数据没有发送完成，则不必急着关闭Socket，可以继续发送数据。所以你先发送ACK，”告诉Client端，你的请求我收到了，但是我还没准备好，请继续你等我的消息”。这个时候Client端就进入FIN_WAIT状态，继续等待Server端的FIN报文。当Server端确定数据已发送完成，则向Client端发送FIN报文，”告诉Client端，好了，我这边数据发完了，准备好关闭连接了”。Client端收到FIN报文后，”就知道可以关闭连接了，但是他还是不相信网络，怕Server端不知道要关闭，所以发送ACK后进入TIME_WAIT状态，如果Server端没有收到ACK则可以重传。“，Server端收到ACK后，”就知道可以断开连接了”。Client端等待了2MSL后依然没有收到回复，则证明Server端已正常关闭，那好，我Client端也可以关闭连接了。Ok，TCP连接就这样关闭了！</p>
+</blockquote>
+<p><strong>【注意】</strong> 在TIME_WAIT状态中，如果TCP client端最后一次发送的ACK丢失了，它将重新发送。TIME_WAIT状态中所需要的时间是依赖于实现方法的。典型的值为30秒、1分钟和2分钟。等待之后连接正式关闭，并且所有的资源(包括端口号)都被释放。</p>
+<p><strong>【问题1】为什么连接的时候是三次握手，关闭的时候却是四次握手？</strong><br>答：因为当Server端收到Client端的SYN连接请求报文后，可以直接发送SYN+ACK报文。其中ACK报文是用来应答的，SYN报文是用来同步的。但是关闭连接时，当Server端收到FIN报文时，很可能并不会立即关闭SOCKET，所以只能先回复一个ACK报文，告诉Client端，”你发的FIN报文我收到了”。只有等到我Server端所有的报文都发送完了，我才能发送FIN报文，因此不能一起发送。故需要四步握手。</p>
+<p><strong>【问题2】为什么TIME_WAIT状态需要经过2MSL(最大报文段生存时间)才能返回到CLOSE状态？</strong></p>
+<p>答：虽然按道理，四个报文都发送完毕，我们可以直接进入CLOSE状态了，但是我们必须假象网络是不可靠的，有可以最后一个ACK丢失。所以TIME_WAIT状态就是用来重发可能丢失的ACK报文。</p>
+<h4 id="2-3-发起HTTP请求"><a href="#2-3-发起HTTP请求" class="headerlink" title="2.3 发起HTTP请求"></a>2.3 发起HTTP请求</h4><p>请求方法：</p>
+<ul>
+<li>GET:获取资源</li>
+<li>POST:传输实体主体</li>
+<li>HEAD:获取报文首部</li>
+<li>PUT:传输文件</li>
+<li>DELETE:删除文件</li>
+<li>OPTIONS:询问支持的方法</li>
+<li>TRACE:追踪路径</li>
+</ul>
+<p>请求报文：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2075673-1f2c0829b7a86c6d.png" alt=""></p>
+<h4 id="2-4-接受响应结果"><a href="#2-4-接受响应结果" class="headerlink" title="2.4 接受响应结果"></a>2.4 接受响应结果</h4><p>状态码：</p>
+<ul>
+<li>1**：信息性状态码</li>
+<li>2**：成功状态码<br>200：OK 请求正常处理<br>204：No Content请求处理成功，但没有资源可返回<br>206：Partial Content对资源的某一部分的请求</li>
+<li>3**：重定向状态码<br>301：Moved Permanently 永久重定向<br>302：Found 临时性重定向<br>304：Not Modified 缓存中读取</li>
+<li>4**：客户端错误状态码<br>400：Bad Request 请求报文中存在语法错误<br>401：Unauthorized需要有通过Http认证的认证信息<br>403：Forbidden访问被拒绝<br>404：Not Found无法找到请求资源</li>
+<li>5**：服务器错误状态码<br>500：Internal Server Error 服务器端在执行时发生错误<br>503：Service Unavailable 服务器处于超负载或者正在进行停机维护</li>
+</ul>
+<p>响应报文：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2075673-a7d5616fac0adec7.png" alt=""></p>
+<h4 id="2-5-浏览器解析html"><a href="#2-5-浏览器解析html" class="headerlink" title="2.5 浏览器解析html"></a>2.5 浏览器解析html</h4><p>​    浏览器按顺序解析html文件，构建DOM树，在解析到外部的css和js文件时，向服务器发起请求下载资源，若是下载css文件，则解析器会在下载的同时继续解析后面的html来构建DOM树，则在下载js文件和执行它时，解析器会停止对html的解析。这便出现了js阻塞问题。<br><strong>预加载器</strong>：<br>    当浏览器被脚本文件阻塞时，预加载器（一个轻量级的解析器）会继续解析后面的html，寻找需要下载的资源。如果发现有需要下载的资源，预加载器在开始接收这些资源。预加载器只能检索HTML标签中的URL，无法检测到使用脚本添加的URL，这些资源要等脚本代码执行时才会获取。<br>注: 预解析并不改变Dom树，它将这个工作留给主解析过程</p>
+<p>​    浏览器解析css，形成CSSOM树，当DOM树构建完成后，浏览器引擎通过DOM树和CSSOM树构造出渲染树。渲染树中包含可视节点的样式信息（不可见节点将不会被添加到渲染树中，如：head元素和display值为none的元素）</p>
+<blockquote>
+<p>值得注意的是，这个过程是逐步完成的，为了更好的用户体验，渲染引擎将会尽可能早的将内容呈现到屏幕上，并不会等到所有的html都解析完成之后再去构建和布局render树。它是解析完一部分内容就显示一部分内容，同时，可能还在通过网络下载其余内容。</p>
+</blockquote>
+<h4 id="2-6-浏览器布局渲染"><a href="#2-6-浏览器布局渲染" class="headerlink" title="2.6 浏览器布局渲染"></a>2.6 浏览器布局渲染</h4><ul>
+<li>布局：通过计算得到每个渲染对象在可视区域中的具体位置信息（大小和位置），这是一个递归的过程。</li>
+<li>绘制：将计算好的每个像素点信息绘制在屏幕上</li>
+</ul>
+<p>​    在页面显示的过程中会多次进行Reflow和Repaint操作，而Reflow的成本比Repaint的成本高得多的多。因为Repaint只是将某个部分进行重新绘制而不用改变页面的布局，如：改变了某个元素的背景颜色。而如果将元素的display属性由block改为none则需要Reflow。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2075673-e6b92f5c6c8c50d4.png" alt=""></p>
 
       
     </div>
@@ -475,7 +524,7 @@
   </li>
 
   <li class="post-copyright-date">
-      <strong>发布时间：</strong>2017年10月23日 - 12时10分
+      <strong>发布时间：</strong>2017年11月10日 - 12时11分
   </li>  
 
   <li class="post-copyright-license">
@@ -573,8 +622,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -638,6 +696,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-先上图"><span class="nav-number">1.</span> <span class="nav-text">1.先上图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-详说过程"><span class="nav-number">2.</span> <span class="nav-text">2.详说过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-DNS域名解析"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 DNS域名解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-建立TCP连接"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 建立TCP连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-发起HTTP请求"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 发起HTTP请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-接受响应结果"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 接受响应结果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-浏览器解析html"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 浏览器解析html</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6-浏览器布局渲染"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 浏览器布局渲染</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
