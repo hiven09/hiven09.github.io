@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Hiven">
 <meta property="og:description" content="高可用是个比较有意思的方向，是分布式系统架构设计中必须考虑的因素之一">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-03T09:40:43.233Z">
+<meta property="og:updated_time" content="2018-04-09T08:41:17.895Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="高可用架构">
 <meta name="twitter:description" content="高可用是个比较有意思的方向，是分布式系统架构设计中必须考虑的因素之一">
@@ -407,7 +407,9 @@
       
 
       
-        <h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>高可用HA（High Availability）是分布式系统架构设计中必须考虑的因素之一， 它通常是指，通过设计减少系统不能提供服务的时间。</p>
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>​    Heartbeat、Corosync、Keepalived这三个集群组件我们到底选哪个好，首先我想说明的是，Heartbeat、Corosync是属于同一类型，Keepalived与Heartbeat、Corosync，根本不是同一类型的。Keepalived使用的vrrp协议方式，虚拟路由冗余协议 (Virtual Router Redundancy Protocol，简称VRRP)；Heartbeat或Corosync是基于主机或网络服务的高可用方式；简单的说就是，Keepalived的目的是模拟路由器的高可用，Heartbeat或Corosync的目的是实现Service的高可用。</p>
+<p>​    所以一般Keepalived是实现前端高可用，常用的前端高可用的组合有，就是我们常见的LVS+Keepalived、Nginx+Keepalived、HAproxy+Keepalived。而Heartbeat或Corosync是实现服务的高可用，常见的组合有Heartbeat v3(Corosync)+Pacemaker+NFS+Httpd 实现Web服务器的高可用、Heartbeat v3(Corosync)+Pacemaker+NFS+MySQL 实现MySQL服务器的高可用。总结一下，Keepalived中实现轻量级的高可用，一般用于前端高可用，且不需要共享存储，一般常用于两个节点的高可用。而Heartbeat(或Corosync)一般用于服务的高可用，且需要共享存储，一般用于多节点的高可用。这个问题我们说明白了。</p>
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>高可用HA（High Availability）是分布式系统架构设计中必须考虑的因素之一， 它通常是指，通过设计减少系统不能提供服务的时间。</p>
 <p>单点往往是系统高可用最大的风险和敌人，应该尽量在系统设计的过程中避免单点。 高可用保证的原则是“集群化”，或者叫“冗余”：只有一个单点，挂了服务会受影响。<br>如果有冗余备份，挂了还有其他backup能够顶上。</p>
 <p>有了冗余之后，还不够，每次出现故障需要人工介入恢复势必会增加系统的不可服务实践。<br> 所以，又往往是通过“自动故障转移”来实现系统的高可用。</p>
 <ul>
@@ -643,7 +645,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -698,7 +700,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#说明"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端到方向代理"><span class="nav-number">2.</span> <span class="nav-text">客户端到方向代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反向代理层到站点层"><span class="nav-number">3.</span> <span class="nav-text">反向代理层到站点层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#站点层到服务层"><span class="nav-number">4.</span> <span class="nav-text">站点层到服务层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库层的高可用"><span class="nav-number">5.</span> <span class="nav-text">数据库层的高可用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL读写分离"><span class="nav-number">7.</span> <span class="nav-text">MySQL读写分离</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#说明"><span class="nav-number">2.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端到方向代理"><span class="nav-number">3.</span> <span class="nav-text">客户端到方向代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反向代理层到站点层"><span class="nav-number">4.</span> <span class="nav-text">反向代理层到站点层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#站点层到服务层"><span class="nav-number">5.</span> <span class="nav-text">站点层到服务层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库层的高可用"><span class="nav-number">6.</span> <span class="nav-text">数据库层的高可用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL读写分离"><span class="nav-number">8.</span> <span class="nav-text">MySQL读写分离</span></a></li></ol></div>
             
 
           </div>

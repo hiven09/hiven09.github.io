@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Hiven">
 <meta property="og:description" content="面试小结吧，细而杂，主要在于平时积累">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-03T09:38:55.116Z">
+<meta property="og:updated_time" content="2018-04-17T06:40:15.331Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试">
 <meta name="twitter:description" content="面试小结吧，细而杂，主要在于平时积累">
@@ -416,25 +416,35 @@
 </li>
 <li><p>数据库的存储引擎，myisam与innodb的区别，说出除了这两种外的其他存储引擎。<br>  区别：索引，事务，结构<br>  tokuDB,memory等</p>
 </li>
-<li><p>int 与bigint的区别，实际使用的时候主键选择哪个？int（10）与int（11）的区别，varchar与char的区别<br>  长度不一样，看情况数据多久使用bigint。 int(10) / int(11) 后面这个括号里的数字是显示长度，不会影响到存储，有zerofill的<br>  时候才有区别。varchar是变长 char是定长。</p>
+<li><p>int 与bigint的区别，实际使用的时候主键选择哪个？int（10）与int（11）的区别，varchar与char的区别<br>  长度不一样，看情况数据多久使用bigint。 int(10) / int(11) 后面这个括号里的数字是显示长度，不会影响到存储，有zerofill的时候才有区别。varchar是变长 char是定长。</p>
 </li>
 <li><p>数据库设计，用户表与登录表分开的好处，<br>  冷热数据分开，提高速度因为活跃用户只是总用户的一小部分,</p>
 </li>
-<li><p>session与cookie的区别<br>  分布式怎样解决session共享问题<br>　　存储在独立的共享空间中（mysql，redis，memcache）</p>
+<li><p>session与cookie的区别<br>  分布式怎样解决session共享问题存储在独立的共享空间中（mysql，redis，memcache）</p>
 </li>
-<li><p>get与post的区别<br>　　GET的语义是请求获取指定的资源。GET方法是安全、幂等、可缓存的（除非有<br>　　Cache-ControlHeader的约束）,GET方法的报文主体没有任何语义。POST的语义是根据请求负荷（报文主体）对指定的资源做出处<br>　　理，具体的处理方式视资源类型而不同。POST不安全，不幂等，（大部分实现）不可缓存。为了针对其不可缓存性，有一系列的<br>　　方法来进行优化，以后有机会再研究（FLAG已经立起）。</p>
+<li><p>get与post的区别<br>  GET的语义是请求获取指定的资源。GET方法是安全、幂等、可缓存的（除非有Cache-ControlHeader的约束）,GET方法的报文主体没有任何语义。POST的语义是根据请求负荷（报文主体）对指定的资源做出处理，具体的处理方式视资源类型而不同。POST不安全，不幂等，（大部分实现）不可缓存。为了针对其不可缓存性，有一系列的方法来进行优化，以后有机会再研究（FLAG已经立起）。</p>
 </li>
-<li>php autoload机制<br>　　调用不存在的类的时候自动调用该函数，该函数内部实现通过类名（参数）查找类文件的方法</li>
-<li>三次握手与四次挥手的过程（主要是画图），各个参数的含义<br>　　 SYN    SYN+ACK   ACK</li>
+<li>php autoload机制<br>  调用不存在的类的时候自动调用该函数，该函数内部实现通过类名（参数）查找类文件的方法</li>
+<li>三次握手与四次挥手的过程（主要是画图），各个参数的含义<br>   SYN    SYN+ACK   ACK</li>
 <li>http与https的区别，https怎样保准安全（结合ssl）<br>[<a href="http://www.jianshu.com/p/b894a7e1c779]" target="_blank" rel="noopener">http://www.jianshu.com/p/b894a7e1c779]</a><br>[<a href="http://wetest.qq.com/lab/view/110.html]" target="_blank" rel="noopener">http://wetest.qq.com/lab/view/110.html]</a><br>[<a href="http://www.barretlee.com/blog/2016/04/24/detail-about-ca-and-certs/]" target="_blank" rel="noopener">http://www.barretlee.com/blog/2016/04/24/detail-about-ca-and-certs/]</a></li>
 </ul>
 <ul>
 <li><p>链表的结构体（线性和链式），插入一个元素的操作代码（纸上写）</p>
 </li>
 <li><p>排序部分，时间复杂度，写出一个排序算法。</p>
+<p>  冒泡排序</p>
+<p>  ​    思想：两两比较相邻记录的关键字，反序则交换，直到没有反序为止。</p>
+<p>  ​    分析：最好的情况比较n-1次，时间复杂度O(n)；最坏的情况比较n(n-1)/2次，时间复杂度O(n2)</p>
+<p>  选择排序</p>
+<p>  ​    思想：每趟在n-i+1次比较里，选择关键字最小的记录与第i个记录交换。</p>
+<p>  ​    分析：比较次数，最好最坏都是n(n-1)/2次；交换次数，最好0次，最坏n-1次，综合起来时间复杂度是O(n2)。性能比冒泡好一点。</p>
+<p>  插入排序</p>
+<p>  ​    思想：将一个记录插入到已经排好序的有序表中，表记录数加1。</p>
+<p>  ​    分析：如果记录顺序是随机的，平均比较和移动的次数为n2/4，时间复杂度是O(n2)。性能比冒泡和选择要好一点。</p>
 </li>
-<li><p>二分查找的思想，时间复杂度
-　</p>
+<li><p>二分查找的思想，时间复杂度</p>
+<p>  总共有n个元素，渐渐跟下去就是n,n/2,n/4,….n/2^k ，其中k就是循环的次数由于你n/2^k取整后&gt;=1</p>
+<p>  即令n/2^k=1可得k=log2n,（是以2为底，n的对数）所以时间复杂度可以表示O()=O(logn)</p>
 </li>
 <li><p>apache与ngiax的区别<br>nginx性能高，这得益于Nginx使用了最新的epoll（Linux2.6内核）和kqueue（freebsd）网络I/O模型，而Apache则使用的是传统的select模型。目前Linux下能够承受高并发访问的Squid、Memcached都采用的是epoll网络I/O模型。<br>apache基于进程，nginx基于线程</p>
 </li>
@@ -451,7 +461,7 @@
 <ul>
 <li>写一个timer类，用来统计应用程序的运行时间，并写出调用方法。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">class timer &#123;</span><br><span class="line">    private $checkPoint = [];</span><br><span class="line"></span><br><span class="line">    public function __construct() &#123;</span><br><span class="line">        $this-&gt;checkPoint[] = time();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function check() &#123;</span><br><span class="line">        $this-&gt;checkPoint[] = time();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function show() &#123;</span><br><span class="line">        foreach ($this-&gt;checkPoint as &amp;$item) &#123;</span><br><span class="line">            echo $item . PHP_EOL;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$time = new timer();</span><br><span class="line">sleep(2);</span><br><span class="line">$time-&gt;check();</span><br><span class="line">sleep(4);</span><br><span class="line">$time-&gt;check();</span><br><span class="line">sleep(3);</span><br><span class="line">$time-&gt;show();</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class timer &#123;</span><br><span class="line">    private $checkPoint = [];</span><br><span class="line">    public function __construct() &#123;</span><br><span class="line">        $this-&gt;checkPoint[] = time();</span><br><span class="line">    &#125;</span><br><span class="line">    public function check() &#123;</span><br><span class="line">        $this-&gt;checkPoint[] = time();</span><br><span class="line">    &#125;</span><br><span class="line">    public function show() &#123;</span><br><span class="line">        foreach ($this-&gt;checkPoint as &amp;$item) &#123;</span><br><span class="line">            echo $item . PHP_EOL;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$time = new timer();</span><br><span class="line">sleep(2);</span><br><span class="line">$time-&gt;check();</span><br><span class="line">sleep(4);</span><br><span class="line">$time-&gt;check();</span><br><span class="line">sleep(3);</span><br><span class="line">$time-&gt;show();</span><br></pre></td></tr></table></figure>
 <ul>
 <li>新浪微博一年产生的数据量是多少，应该怎么存储这些数据。<br>  历史数据归档, 使用压缩比高的引擎比如tokudb</li>
 <li>状态吗：204，304，404的含义，可以参考（<a href="http://tool.oschina.net/commons?type=5）" target="_blank" rel="noopener">http://tool.oschina.net/commons?type=5）</a></li>
@@ -477,10 +487,9 @@
 </li>
 <li><p>一个数据表，70个字段，10G的数据量，每天50w的数据增量，说出有哪些优化的方法<br>  拆字段<br>  10天一分区 或者 分表</p>
 </li>
-<li>写一个定时任务，每天2点到8点，每隔10分钟调用一次PHP脚本 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/10 2-8 * * * /data/www/test.php</span><br></pre></td></tr></table></figure>
+<li><p>写一个定时任务，每天2点到8点，每隔10分钟调用一次PHP脚本 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/10 2-8 * * * /data/www/test.php</span><br></pre></td></tr></table></figure>
 </li>
-</ul>
-<ul>
 <li><p>使用正则表达式判断ip的合法性，要考虑全面</p>
 </li>
 <li><p>redis中数据存储方式，各种数据结构应用的场景，redis做消息队列与专业的消息队列有什么区别和优势<br>  redis队列是轻量级的队列，不支持消息持久化</p>
@@ -631,7 +640,8 @@ Memcahce采用LRU算法来逐渐把过期数据清除掉。
 </li>
 <li><p>如何提高缓存命中率? 如何对缓存进行颗粒化?<br>  细粒度，分层</p>
 </li>
-<li>php的内存回收机制是?<br>  5.3是引用计数，之后对引用计数做了优化，算法没看懂网上也没找到将明白的文章<br>  1、并不是每次refcount减少时都进入回收周期，只有根缓冲区满额后在开始垃圾回收。<br>  2、可以解决循环引用问题。<br>  3、可以总将内存泄露保持在一个阈值以下。</li>
+<li><p>php的内存回收机制是?<br>  5.3是引用计数，之后对引用计数做了优化，算法没看懂网上也没找到将明白的文章<br>  1、并不是每次refcount减少时都进入回收周期，只有根缓冲区满额后在开始垃圾回收。<br>  2、可以解决循环引用问题。<br>  3、可以总将内存泄露保持在一个阈值以下。</p>
+</li>
 <li><p>memcache magent 分布式设计？</p>
 </li>
 <li><p>redis 分布式设计，如何设计？</p>
@@ -640,9 +650,16 @@ Memcahce采用LRU算法来逐渐把过期数据清除掉。
 </li>
 <li><p>闭包<br>各种专业文献上的”闭包”（closure）定义非常抽象，很难看懂。我的理解是，闭包就是能够读取其他函数内部变量的函数。<br>由于在Javascript语言中，只有函数内部的子函数才能读取局部变量，因此可以把闭包简单理解成”定义在一个函数内部的函数”。<br>所以，在本质上，闭包就是将函数内部和函数外部连接起来的一座桥梁。<br>闭包可以用在许多地方。它的最大用处有两个，一个是前面提到的可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中。</p>
 </li>
-<li>PHP的MySQL扩展<br>  设计开发允许PHP应用与MySQL数据库交互的早期扩展。mysql扩展提供了一个面向过程 的接口，<br>  并且是针对MySQL4.1.3或更早版本设计的。因此，这个扩展虽然可以与MySQL4.1.3或更新的数<br>  据库服务端 进行交互，但并不支持后期MySQL服务端提供的一些特性。</li>
-<li>PHP的mysqli扩展<br>  mysqli扩展，我们有时称之为MySQL增强扩展，可以用于使用 MySQL4.1.3或更新版本中新的高级特性。<br>  mysqli扩展在PHP 5及以后版本中包含。<br>  mysqli扩展有一系列的优势，相对于mysql扩展的提升主要有：<br>  面向对象接口<br>  prepared语句支持<br>  多语句执行支持<br>  事务支持<br>  增强的调试能力<br>  嵌入式服务支持</li>
-<li>PHP数据对象(PDO)<br>PHP数据对象，是PHP应用中的一个数据库抽象层规范。PDO提供了一个统一的API接口可以<br>使得你的PHP应用不去关心具体要 连接的数据库服务器系统类型。也就是说，<br>如果你使用PDO的API，可以在任何需要的时候无缝切换数据库服务器</li>
+<li><p>PHP的MySQL扩展<br>设计开发允许PHP应用与MySQL数据库交互的早期扩展。mysql扩展提供了一个面向过程 的接口，<br>并且是针对MySQL4.1.3或更早版本设计的。因此，这个扩展虽然可以与MySQL4.1.3或更新的数<br>据库服务端 进行交互，但并不支持后期MySQL服务端提供的一些特性。</p>
+</li>
+<li><p>PHP的mysqli扩展<br>mysqli扩展，我们有时称之为MySQL增强扩展，可以用于使用 MySQL4.1.3或更新版本中新的高级特性。<br>mysqli扩展在PHP 5及以后版本中包含。<br>mysqli扩展有一系列的优势，相对于mysql扩展的提升主要有：<br>面向对象接口<br>prepared语句支持<br>多语句执行支持<br>事务支持<br>增强的调试能力<br>嵌入式服务支持</p>
+</li>
+<li><p>PHP数据对象(PDO)<br>PHP数据对象，是PHP应用中的一个数据库抽象层规范。PDO提供了一个统一的API接口可以<br>使得你的PHP应用不去关心具体要 连接的数据库服务器系统类型。也就是说，<br>如果你使用PDO的API，可以在任何需要的时候无缝切换数据库服务器</p>
+<p>实战</p>
+<p>百度<br>1.TCP三次握手</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.第一次握手：建立连接。客户端发送连接请求报文段，将SYN位置为1，Sequence Number为x；然后，客户端进入SYN_SEND状态，等待服务器的确认；</span><br><span class="line">2.第二次握手：服务器收到SYN报文段。服务器收到客户端的SYN报文段，需要对这个SYN报文段进行确认，设置Acknowledgment Number为x+1(Sequence Number+1)；同时，自己自己还要发送SYN请求信息，将SYN位置为1，Sequence Number为y；服务器端将上述所有信息放到一个报文段（即SYN+ACK报文段）中，一并发送给客户端，此时服务器进入SYN_RECV状态；</span><br><span class="line">3.第三次握手：客户端收到服务器的SYN+ACK报文段。然后将Acknowledgment Number设置为y+1，向服务器发送ACK报文段，这个报文段发送完毕以后，客户端和服务器端都进入ESTABLISHED状态，完成TCP三次握手。</span><br><span class="line">完成了三次握手，客户端和服务器端就可以开始传送数据。以上就是TCP三次握手的总体介绍。</span><br></pre></td></tr></table></figure>
+<p>2.设计模式<br>3.DDOS攻击和防范<br>4.php-fpm和fastcgi<br>5.项目亮点以及优化<br>腾讯<br>1.二分查找<br>2.项目框架<br>3.高并发和高可用技术选型<br>4.数组互换<br>5.静态变量和局部静态变量<br>6.数据库类型和索引结构</p>
+</li>
 </ul>
 
       
@@ -826,7 +843,7 @@ Memcahce采用LRU算法来逐渐把过期数据清除掉。
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
