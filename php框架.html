@@ -87,10 +87,13 @@
 <meta property="og:site_name" content="Hiven">
 <meta property="og:description" content="PHP高性能框架比较之yaf和phalcon">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-03T09:19:50.828Z">
+<meta property="og:image" content="https://github.com/fupengfei058/article-collection/blob/master/doc/e2.png?raw=true">
+<meta property="og:image" content="https://github.com/fupengfei058/article-collection/blob/master/doc/e3.png?raw=true">
+<meta property="og:updated_time" content="2018-04-19T02:12:23.791Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="框架比较">
 <meta name="twitter:description" content="PHP高性能框架比较之yaf和phalcon">
+<meta name="twitter:image" content="https://github.com/fupengfei058/article-collection/blob/master/doc/e2.png?raw=true">
 
 
 
@@ -407,8 +410,45 @@
       
 
       
-        <h3 id="yaf"><a href="#yaf" class="headerlink" title="yaf"></a>yaf</h3><p>yaf为何快<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1. 用C语言开发的PHP框架, 相比原生的PHP, 几乎不会带来额外的性能开销.</span><br><span class="line">2. 所有的框架类, 不需要编译, 在PHP启动的时候加载, 并常驻内存.</span><br><span class="line">3. 更短的内存周转周期, 提高内存利用率, 降低内存占用率.</span><br><span class="line">4. 灵巧的自动加载. 支持全局和局部两种加载规则, 方便类库共享.</span><br><span class="line">5. 高性能的视图引擎.</span><br><span class="line">6. 高度灵活可扩展的框架, 支持自定义视图引擎, 支持插件, 支持自定义路由等等.</span><br><span class="line">7. 内建多种路由, 可以兼容目前常见的各种路由协议.</span><br><span class="line">8. 强大而又高度灵活的配置文件支持. 并支持缓存配置文件, 避免复杂的配置结构带来的性能损失.</span><br><span class="line">9. 在框架本身,对危险的操作习惯做了禁止.</span><br><span class="line">10. 更快的执行速度, 更少的内存占用.</span><br></pre></td></tr></table></figure></p>
-<h3 id="phalcon"><a href="#phalcon" class="headerlink" title="phalcon"></a>phalcon</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. Zephir/C 扩展的加载与 PHP web 服务器守护进程启动进程一次</span><br><span class="line">2. 所有的框架类, 不需要编译, 在PHP启动的时候加载, 并常驻内存.</span><br><span class="line">3. 内建多种路由, 可以兼容目前常见的各种路由协议.</span><br></pre></td></tr></table></figure>
+        <h3 id="yaf"><a href="#yaf" class="headerlink" title="yaf"></a>yaf</h3><p>yaf为何快</p>
+<blockquote>
+<ol>
+<li>用C语言开发的PHP框架, 相比原生的PHP, 几乎不会带来额外的性能开销.</li>
+<li>所有的框架类, 不需要编译, 在PHP启动的时候加载, 并常驻内存.</li>
+<li>更短的内存周转周期, 提高内存利用率, 降低内存占用率.</li>
+<li>灵巧的自动加载. 支持全局和局部两种加载规则, 方便类库共享.</li>
+<li>高性能的视图引擎.</li>
+<li>高度灵活可扩展的框架, 支持自定义视图引擎, 支持插件, 支持自定义路由等等.</li>
+<li>内建多种路由, 可以兼容目前常见的各种路由协议.</li>
+<li>强大而又高度灵活的配置文件支持. 并支持缓存配置文件, 避免复杂的配置结构带来的性能损失.</li>
+<li>在框架本身,对危险的操作习惯做了禁止.</li>
+<li>更快的执行速度, 更少的内存占用.</li>
+</ol>
+</blockquote>
+<h3 id="phalcon"><a href="#phalcon" class="headerlink" title="phalcon"></a>phalcon</h3><blockquote>
+<ol>
+<li>Zephir/C 扩展的加载与 PHP web 服务器守护进程启动进程一次</li>
+<li>所有的框架类, 不需要编译, 在PHP启动的时候加载, 并常驻内存.</li>
+<li>内建多种路由, 可以兼容目前常见的各种路由协议.</li>
+</ol>
+</blockquote>
+<p>​    Phalcon基于C语言写的ORM，配合PHP-FPM提供的多进程的PHP数据库连接池，将提供性能极为强悍并且健壮的多进程数据库连接池。苦逼的是我大Phalcon文档太烂，根本就没提到这方面的先天优势。根本不需要swoole，nginx与php-fpm的黄金搭档以及phalcon提供的高性能ORM，就能提供目前最好的PHP数据库连接池解决方案。</p>
+<p>​    就是PHP-FPM的配置文件。关于配置文件，PHPer都看得懂，我就不多说了。主要说说PHP-FPM带来的PHP数据库连接池的特色：</p>
+<p><img src="https://github.com/fupengfei058/article-collection/blob/master/doc/e2.png?raw=true" alt=""></p>
+<p>​        </p>
+<ol>
+<li><p>PHP-FPM一个进程对应一个持久化的数据库连接；</p>
+</li>
+<li><p>所有PHP-FPM进程所创造的持久化数据库连接，不能超过mysql的最大数据库连接数的，默认max_connections为150个连接。所以，不管是动态还是静态管理PHP-FPM进程，都需要注意PHP-FPM的进程数和mysql的最大连接数。</p>
+</li>
+<li><p>如果一个PHP请求，请求了多个不同数据库的数据，创建了多个持久化的数据库连接。那么对应的PHP-FPM就会在一个进程内创建多个持久化的数据库连接。这里是一个比较坑的地方，所有PHPer都应该注意。</p>
+<p>假设服务器有100个PHP-FPM的进程，单个请求向5个不同的数据库请求持久化连接的数据，那么服务器将会创建500个持久化的数据库连接。</p>
+</li>
+</ol>
+<p>虽然Phalcon官方文档并没有提及PDO的数据库连接池，但是翻看Phalcon的PDO类的源代码，就会发现Phalcon实际上是支持PDO的数据库连接池</p>
+<p><img src="https://github.com/fupengfei058/article-collection/blob/master/doc/e3.png?raw=true" alt=""></p>
+<p>​    不仅仅支持PHP的数据库连接池，而且他用C语言写的ORM，性能要比所有的PHP语言写的ORM要强很多。也就是说Phalcon的ORM及与PHP-FPM实现的数据库连接池，就是目前PHP所有框架中数据库连接池性能最强的。</p>
+<p>​    yaf框架虽然路由性能比phalcon略好，但是由于没有ORM，在拉取PHP所写的ORM后，其ORM性能要比Phalcon内置的C语言所写的PHQL要差</p>
 
       
     </div>
@@ -602,7 +642,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -613,7 +653,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
